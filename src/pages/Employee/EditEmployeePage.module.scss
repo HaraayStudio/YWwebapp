@@ -4,6 +4,8 @@
   padding: $spacing-xl;
   background: $gradient-background;
   min-height: 100vh;
+  border-radius: 15px;
+  background: linear-gradient(135deg, #f6f7ec 0%, #f9faaeb7 100%);
 }
 
 .breadcrumb {

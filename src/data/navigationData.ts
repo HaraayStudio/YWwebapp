@@ -144,17 +144,17 @@ const NAV_PERMISSIONS: Record<string, UserRole[] | 'ALL'> = {
   'all-quotations':  ['ADMIN', 'CO_FOUNDER', 'SR_ARCHITECT', 'JR_ARCHITECT'],
 
   // Pre Sales
-  'presales-new': ['ADMIN', 'CO_FOUNDER', 'SR_ARCHITECT', 'LIAISON_MANAGER', 'LIAISON_OFFICER', 'LIAISON_ASSISTANT'],
-  'presales-all': ['ADMIN', 'CO_FOUNDER', 'SR_ARCHITECT', 'LIAISON_MANAGER', 'LIAISON_OFFICER'],
+  'presales-new': ['ADMIN', 'CO_FOUNDER', 'SR_ARCHITECT', 'LIAISON_MANAGER', 'LIAISON_OFFICER', 'LIAISON_ASSISTANT', 'HR'],
+  'presales-all': ['ADMIN', 'CO_FOUNDER', 'SR_ARCHITECT', 'LIAISON_MANAGER', 'LIAISON_OFFICER', 'HR'],
 
   // Post Sales
-  'postsales-new':      ['ADMIN', 'CO_FOUNDER', 'SR_ARCHITECT'],
-  'postsales-all':      ['ADMIN', 'CO_FOUNDER', 'SR_ARCHITECT', 'JR_ARCHITECT'],
-  'postsales-invoices': ['ADMIN', 'CO_FOUNDER'],
+  'postsales-new':      ['ADMIN', 'CO_FOUNDER', 'SR_ARCHITECT', 'HR'],
+  'postsales-all':      ['ADMIN', 'CO_FOUNDER', 'SR_ARCHITECT', 'JR_ARCHITECT', 'HR'],
+  'postsales-invoices': ['ADMIN', 'CO_FOUNDER', 'HR'],
 
   // Clients
-  'manage-clients': ['ADMIN', 'CO_FOUNDER', 'SR_ARCHITECT', 'JR_ARCHITECT', 'LIAISON_MANAGER', 'LIAISON_OFFICER'],
-  'add-new-client': ['ADMIN', 'CO_FOUNDER', 'SR_ARCHITECT', 'LIAISON_MANAGER'],
+  'manage-clients': ['ADMIN', 'CO_FOUNDER', 'SR_ARCHITECT', 'JR_ARCHITECT', 'LIAISON_MANAGER', 'LIAISON_OFFICER' , 'HR'],
+  'add-new-client': ['ADMIN', 'CO_FOUNDER', 'SR_ARCHITECT', 'LIAISON_MANAGER' , 'HR'],
 
   // Reports
   'inventory-report':    ['ADMIN', 'CO_FOUNDER'],

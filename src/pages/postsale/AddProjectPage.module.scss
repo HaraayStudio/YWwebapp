@@ -74,6 +74,8 @@
   padding: 32px;
   min-height: 100vh;
   background: var(--bg-main);
+  border-radius: 15px;
+  background: linear-gradient(135deg, #f6f7ec 0%, #f9faaeb7 100%);
 }
 
 .breadcrumb {

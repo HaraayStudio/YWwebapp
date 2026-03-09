@@ -293,7 +293,7 @@ const DocumentPopup = ({ doc, onClose }) => {
 
 // ─── Stage Tree Node ──────────────────────────────────────────────────────────
 const StageNode = ({ stage, depth = 0, onDocClick, onAddDoc }) => {
-  const [open, setOpen] = useState(depth < 1);
+  const [open, setOpen] = useState(false);
   const hasChildren = stage.childStages?.length > 0;
   const cfg = STATUS_CONFIG[stage.status] || STATUS_CONFIG.NOT_STARTED;
   const allDocs = stage.documents || [];
@@ -828,7 +828,7 @@ const StructuresTab = ({ structures, navigate, projectId }) => {
   if (!structures?.length) {
     return (
       <div className={styles.emptyState}>
-        <span>🏢</span>
+        {/* <span>🏢</span> */}
         <button
           className={styles.primaryBtn}
           onClick={() => navigate(`/projects/${projectId}/structure`)}

@@ -6,7 +6,8 @@
   background: var(--bg-main, $color-gray-50);
   min-height: 100vh;
   font-family: $font-family-primary;
-
+   border-radius: 15px;
+  background: linear-gradient(135deg, #f6f7ec 0%, #f9faaeb7 100%);
   @media (max-width: $breakpoint-md) {
     padding: $spacing-md;
   }

@@ -62,39 +62,90 @@ const AllPostSales = () => {
               <thead>
                 <tr>
                   <th>#</th>
+                  <th>ID</th>
                   <th>Client</th>
+                  <th>Phone</th>
                   <th>Project</th>
-                  <th>Status</th>
+                  <th>Project Status</th>
+                  <th>Sale Status</th>
+                  <th>Notified</th>
+                  <th>Proforma</th>
+                  <th>Tax</th>
+                  <th>Payments</th>
                   <th>Date</th>
                   <th>Action</th>
                 </tr>
               </thead>
 
               <tbody>
-                {data.map((item, index) => (
-                  <tr key={item.id}>
-                    <td>{page * size + index + 1}</td>
-                    <td>{item.client?.name}</td>
-                    <td>{item.projectName || "-"}</td>
-                    <td>
-                      <span className={`${styles.badge}`}>{item.status}</span>
-                    </td>
-                    <td>
-                      {item.dateTime
-                        ? new Date(item.dateTime).toLocaleDateString()
-                        : "-"}
-                    </td>
-                    <td>
-                      {" "}
-                      <button
-                        className={styles.viewBtn}
-                        onClick={() => navigate(`/postsales/view/${item.id}`)}
-                      >
-                        View
-                      </button>
-                    </td>
-                  </tr>
-                ))}
+                {data.map((item, index) => {
+                  const paymentTotal =
+                    item.taxInvoices?.reduce(
+                      (sum, inv) =>
+                        sum +
+                        (inv.payments?.reduce(
+                          (pSum, p) => pSum + Number(p.amountPaid || 0),
+                          0,
+                        ) || 0),
+                      0,
+                    ) || 0;
+
+                  return (
+                    <tr key={item.id}>
+                      <td>{page * size + index + 1}</td>
+
+                      <td>#{item.id}</td>
+
+                      <td>{item.client?.name || "—"}</td>
+
+                      <td>{item.client?.phone || "—"}</td>
+
+                      <td>
+                        {item.project?.projectName ||
+                          `Project #${item.project?.projectId}`}
+                      </td>
+
+                      <td>{item.project?.projectStatus || "—"}</td>
+
+                      <td>
+                        <span className={styles.badge}>
+                          {item.postSalesStatus || "—"}
+                        </span>
+                      </td>
+
+                      <td>
+                        {item.notified ? (
+                          <span className={styles.yes}>✓ Yes</span>
+                        ) : (
+                          <span className={styles.no}>No</span>
+                        )}
+                      </td>
+
+                      <td>{item.proformaInvoices?.length || 0}</td>
+
+                      <td>{item.taxInvoices?.length || 0}</td>
+
+                      <td>₹{paymentTotal.toLocaleString("en-IN")}</td>
+
+                      <td>
+                        {item.postSalesdateTime
+                          ? new Date(
+                              item.postSalesdateTime,
+                            ).toLocaleDateString()
+                          : "—"}
+                      </td>
+
+                      <td>
+                        <button
+                          className={styles.viewBtn}
+                          onClick={() => navigate(`/postsales/view/${item.id}`)}
+                        >
+                          View
+                        </button>
+                      </td>
+                    </tr>
+                  );
+                })}
               </tbody>
             </table>
           </div>

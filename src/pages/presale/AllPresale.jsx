@@ -85,7 +85,7 @@ const AllPreSales = () => {
   };
   return (
     <div className={styles.pageWrapper}>
-      <div className={styles.breadcrumb}>Pre-Sales &gt; All Pre-Sales</div>
+      {/* <div className={styles.breadcrumb}>Pre-Sales &gt; All Pre-Sales</div> */}
 
       <div className={styles.pageHeader}>
         <h1 className={styles.pageTitle}>Pre-Sales List</h1>

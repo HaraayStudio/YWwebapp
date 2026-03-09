@@ -108,9 +108,16 @@ const AddEmployee = () => {
             <label className={styles.label}>Phone</label>
             <input
               className={styles.input}
-              type="number"
+              type="tel"
+              maxLength={10}
               value={formData.phone}
-              onChange={(e) => handleChange("phone", e.target.value)}
+              onChange={(e) => {
+                const value = e.target.value.replace(/\D/g, ""); // remove non digits
+                if (value.length <= 10) {
+                  handleChange("phone", value);
+                }
+              }}
+              placeholder="Enter 10 digit phone number"
             />
           </div>
 
@@ -118,7 +125,7 @@ const AddEmployee = () => {
             <label className={styles.label}>Password</label>
             <input
               className={styles.input}
-              type="password"
+              type="text"
               value={formData.password}
               onChange={(e) => handleChange("password", e.target.value)}
             />

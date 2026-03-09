@@ -1561,7 +1561,8 @@
   font-weight: $font-weight-semibold;
   white-space: nowrap;
   box-shadow: 0 4px 12px rgba($color-primary, 0.25);
-
+  width: 50%;
+  height: 50%;
   &:hover {
     transform: translateY(-1px);
     box-shadow: 0 6px 16px rgba($color-primary, 0.35);

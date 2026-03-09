@@ -145,9 +145,9 @@ const PreSalesPage = () => {
 
   return (
     <div className={styles.pageWrapper}>
-      <div className={styles.breadcrumb}>Pre-Sales &gt; Add-Pre-Sale</div>
+      {/* <div className={styles.breadcrumb}>Pre-Sales &gt; Add-Pre-Sale</div> */}
 
-      <div className={styles.pageTitle}>Add Pre-Sales Entry</div>
+      <div className={styles.pageTitle}>Add Pre-Sales </div>
 
       {/* ===============================
           CLIENT SECTION
@@ -156,16 +156,17 @@ const PreSalesPage = () => {
         <div className={styles.sectionTitle}>Client Information</div>
 
         <div className={styles.formGroup}>
-          <label className={styles.label}>
+          <label className={styles.checkboxWrapper}>
             <input
               type="checkbox"
               checked={isExistingClient}
               onChange={() => setIsExistingClient(!isExistingClient)}
-            />{" "}
-            Existing Client
+            />
+            <span className={styles.customCheckbox}></span>
+            <span className={styles.checkboxText}>Existing Client</span>
           </label>
         </div>
-
+        <br />
         <div className={styles.gridTwo}>
           {!isExistingClient ? (
             <>
