@@ -51,16 +51,24 @@ const AllPreSales = () => {
     });
   };
   const handleStatusChange = (srNumber, newStatus) => {
+    const loadingToast = showLoading("Updating status...");
     updateStatus(
       { srNumber, status: newStatus },
       {
         onSuccess: () => {
+          dismissToast(loadingToast);
+          showSuccess("Status updated successfully");
           setEditingStatus(null);
+        },
+        onError: (error) => {
+          dismissToast(loadingToast);
+          showError(
+            error?.response?.data?.message || "Failed to update status",
+          );
         },
       },
     );
   };
-
   if (isLoading) {
     return (
       <div className={styles.pageWrapper}>
@@ -141,17 +149,19 @@ const AllPreSales = () => {
                         Change
                       </button>
 
-                      {editingStatus === item.srNumber && (
-                        <select
-                          className={styles.statusDropdown}
-                          defaultValue={item.status}
-                          onChange={(e) =>
-                            handleStatusChange(item.srNumber, e.target.value)
+                      {editingStatus && (
+                        <StatusChangeModal
+                          currentStatus={
+                            data?.find(
+                              (item) => item.srNumber === editingStatus,
+                            )?.status ?? ""
                           }
-                        >
-                          <option value="Onboarded">Onboarded</option>
-                          <option value="Not Onboarded">Not Onboarded</option>
-                        </select>
+                          onCancel={() => setEditingStatus(null)}
+                          onConfirm={(newStatus) => {
+                            handleStatusChange(editingStatus, newStatus);
+                            setEditingStatus(null);
+                          }}
+                        />
                       )}
                     </div>
                   </td>
@@ -224,3 +234,88 @@ const AllPreSales = () => {
 };
 
 export default AllPreSales;
+
+const StatusChangeModal = ({ currentStatus, onCancel, onConfirm }) => {
+  const [selected, setSelected] = useState(currentStatus);
+
+  return (
+    <div className={styles.modalOverlay} onClick={onCancel}>
+      <div className={styles.statusModal} onClick={(e) => e.stopPropagation()}>
+        {/* Header */}
+        <div className={styles.statusModalHeader}>
+          <div className={styles.statusModalIcon}>🔄</div>
+          <div>
+            <h3 className={styles.statusModalTitle}>Change Status</h3>
+            <p className={styles.statusModalSub}>
+              Select a new status for this record
+            </p>
+          </div>
+          <button className={styles.statusModalClose} onClick={onCancel}>
+            <svg
+              width="16"
+              height="16"
+              viewBox="0 0 24 24"
+              fill="none"
+              stroke="currentColor"
+              strokeWidth="2.5"
+              strokeLinecap="round"
+            >
+              <line x1="18" y1="6" x2="6" y2="18" />
+              <line x1="6" y1="6" x2="18" y2="18" />
+            </svg>
+          </button>
+        </div>
+
+        {/* Options */}
+        <div className={styles.statusOptions}>
+          {["Onboarded", "Not Onboarded"].map((opt) => (
+            <button
+              key={opt}
+              className={`${styles.statusOption} ${selected === opt ? styles.statusOptionSelected : ""}`}
+              onClick={() => setSelected(opt)}
+            >
+              <span className={styles.statusOptionRadio}>
+                {selected === opt && (
+                  <svg width="10" height="10" viewBox="0 0 10 10">
+                    <circle cx="5" cy="5" r="4" fill="currentColor" />
+                  </svg>
+                )}
+              </span>
+              <span className={styles.statusOptionLabel}>{opt}</span>
+              {opt === "Onboarded" && (
+                <span
+                  className={styles.statusOptionBadge}
+                  style={{ background: "#dcfce7", color: "#14532d" }}
+                >
+                  Active
+                </span>
+              )}
+              {opt === "Not Onboarded" && (
+                <span
+                  className={styles.statusOptionBadge}
+                  style={{ background: "#fef9c3", color: "#713f12" }}
+                >
+                  Pending
+                </span>
+              )}
+            </button>
+          ))}
+        </div>
+
+        {/* Footer */}
+        <div className={styles.statusModalFooter}>
+          <button className={styles.statusCancelBtn} onClick={onCancel}>
+            Cancel
+          </button>
+          <button
+            className={styles.statusConfirmBtn}
+            onClick={() => onConfirm(selected)}
+            disabled={selected === currentStatus}
+          >
+            Apply Change
+          </button>
+        </div>
+      </div>
+    </div>
+  );
+};

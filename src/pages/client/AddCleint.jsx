@@ -81,7 +81,9 @@ const AddClient = () => {
             <label className={styles.label}>Phone</label>
             <input
               className={styles.input}
-              type="number"
+              type="tel"
+              pattern="[0-9]{10}"
+              maxLength={10}
               value={formData.phone}
               onChange={(e) => handleChange("phone", e.target.value)}
             />

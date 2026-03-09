@@ -1,3 +1,5 @@
+@use "../../styles/variables" as *;
+
 .pageWrapper {
   padding: 32px;
   min-height: 100vh;
@@ -341,5 +343,235 @@
   to {
     opacity: 1;
     transform: scale(1);
+  }
+}
+
+// ─── ADD THESE to your existing .module.scss file ────────────────────────────
+// Uses your existing $color-* and $spacing-* variables
+
+// Modal overlay (reuse .modalOverlay if you already have it, otherwise add this)
+.modalOverlay {
+  position: fixed;
+  inset: 0;
+  background: rgba(0, 0, 0, 0.151);
+  // backdrop-filter: blur(3px);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  z-index: 1000;
+  padding: $spacing-md;
+  animation: fadeIn 0.15s ease;
+}
+
+@keyframes fadeIn {
+  from {
+    opacity: 0;
+  }
+  to {
+    opacity: 1;
+  }
+}
+
+// ─── Status Change Modal ──────────────────────────────────────────────────────
+.statusModal {
+  background: $color-white;
+  border-radius: $radius-2xl;
+  width: 100%;
+  max-width: 400px;
+  // box-shadow: 0 20px 60px rgba(0, 0, 0, 0.18);
+  // animation: slideUp 0.22s cubic-bezier(0.16, 1, 0.3, 1);
+  overflow: hidden;
+}
+
+@keyframes slideUp {
+  from {
+    opacity: 0;
+    transform: translateY(20px) scale(0.97);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0) scale(1);
+  }
+}
+
+.statusModalHeader {
+  display: flex;
+  align-items: flex-start;
+  gap: $spacing-md;
+  padding: $spacing-xl;
+  border-bottom: 1px solid $color-gray-100;
+  position: relative;
+}
+
+.statusModalIcon {
+  font-size: 1.6rem;
+  line-height: 1;
+  flex-shrink: 0;
+  margin-top: 2px;
+}
+
+.statusModalTitle {
+  font-family: $font-family-heading;
+  font-size: $font-size-lg;
+  font-weight: $font-weight-bold;
+  color: $color-gray-900;
+  margin: 0 0 3px 0;
+  line-height: 1.2;
+}
+
+.statusModalSub {
+  font-size: $font-size-xs;
+  color: $color-gray-400;
+  margin: 0;
+  line-height: 1.4;
+}
+
+.statusModalClose {
+  position: absolute;
+  top: $spacing-md;
+  right: $spacing-md;
+  width: 30px;
+  height: 30px;
+  border-radius: $radius-md;
+  border: none;
+  background: $color-gray-100;
+  color: $color-gray-500;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  cursor: pointer;
+  transition:
+    background $transition-fast,
+    color $transition-fast;
+
+  &:hover {
+    background: $color-gray-200;
+    color: $color-gray-800;
+  }
+}
+
+// ─── Options ─────────────────────────────────────────────────────────────────
+.statusOptions {
+  display: flex;
+  flex-direction: column;
+  gap: $spacing-sm;
+  padding: $spacing-lg;
+}
+
+.statusOption {
+  display: flex;
+  align-items: center;
+  gap: $spacing-md;
+  width: 100%;
+  padding: $spacing-md;
+  border: 1.5px solid $color-gray-200;
+  border-radius: $radius-xl;
+  background: $color-white;
+  cursor: pointer;
+  text-align: left;
+  transition:
+    border-color $transition-fast,
+    background $transition-fast,
+    box-shadow $transition-fast;
+
+  &:hover {
+    border-color: rgba($color-primary, 0.35);
+    background: rgba($color-primary, 0.03);
+  }
+}
+
+.statusOptionSelected {
+  border-color: $color-primary !important;
+  background: rgba($color-primary, 0.05) !important;
+  box-shadow: 0 0 0 3px rgba($color-primary, 0.1);
+}
+
+.statusOptionRadio {
+  width: 18px;
+  height: 18px;
+  border-radius: 50%;
+  border: 2px solid $color-gray-300;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  flex-shrink: 0;
+  color: $color-primary;
+  transition: border-color $transition-fast;
+
+  .statusOptionSelected & {
+    border-color: $color-primary;
+  }
+}
+
+.statusOptionLabel {
+  flex: 1;
+  font-size: $font-size-sm;
+  font-weight: $font-weight-semibold;
+  color: $color-gray-800;
+}
+
+.statusOptionBadge {
+  display: inline-block;
+  padding: 2px 9px;
+  border-radius: $radius-full;
+  font-size: $font-size-xs;
+  font-weight: $font-weight-semibold;
+  letter-spacing: 0.02em;
+}
+
+// ─── Footer ──────────────────────────────────────────────────────────────────
+.statusModalFooter {
+  display: flex;
+  justify-content: flex-end;
+  gap: $spacing-sm;
+  padding: $spacing-md $spacing-lg;
+  background: $color-gray-50;
+  border-top: 1px solid $color-gray-100;
+}
+
+.statusCancelBtn {
+  background: $color-white;
+  color: $color-gray-600;
+  border: 1px solid $color-gray-200;
+  padding: $spacing-sm $spacing-lg;
+  border-radius: $radius-lg;
+  font-size: $font-size-sm;
+  font-weight: $font-weight-medium;
+  cursor: pointer;
+  transition:
+    background $transition-fast,
+    border-color $transition-fast;
+
+  &:hover {
+    background: $color-gray-100;
+    border-color: $color-gray-300;
+  }
+}
+
+.statusConfirmBtn {
+  background: $color-primary;
+  color: $color-white;
+  border: none;
+  padding: $spacing-sm $spacing-lg;
+  border-radius: $radius-lg;
+  font-size: $font-size-sm;
+  font-weight: $font-weight-semibold;
+  cursor: pointer;
+  box-shadow: 0 4px 12px rgba($color-primary, 0.3);
+  transition:
+    background $transition-fast,
+    opacity $transition-fast,
+    transform $transition-fast;
+
+  &:hover:not(:disabled) {
+    background: darken($color-primary, 8%);
+    transform: translateY(-1px);
+    box-shadow: 0 6px 16px rgba($color-primary, 0.4);
+  }
+
+  &:disabled {
+    opacity: 0.45;
+    cursor: not-allowed;
+    box-shadow: none;
   }
 }
