@@ -41,10 +41,10 @@ const AllPostSales = () => {
   }
   return (
     <div className={styles.PostSalesPage}>
-      <div className={styles.breadcrumb}>Sales &gt; Post-Sales</div>
+      {/* <div className={styles.breadcrumb}>Sales &gt; Project</div> */}
 
       <div className={styles.pageHeader}>
-        <h1 className={styles.pageTitle}>Post-Sales List</h1>
+        <h1 className={styles.pageTitle}>Project List</h1>
       </div>
 
       {data?.length === 0 ? (

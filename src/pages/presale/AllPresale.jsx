@@ -96,7 +96,7 @@ const AllPreSales = () => {
       {/* <div className={styles.breadcrumb}>Pre-Sales &gt; All Pre-Sales</div> */}
 
       <div className={styles.pageHeader}>
-        <h1 className={styles.pageTitle}>Pre-Sales List</h1>
+        <h1 className={styles.pageTitle}>Enquiry List</h1>
       </div>
 
       {data?.length === 0 ? (

@@ -576,7 +576,7 @@ const ViewPostSales = () => {
   return (
     <div className={styles.pageWrapper}>
       {/* ── Breadcrumb ── */}
-      <div className={styles.breadcrumb}>
+      {/* <div className={styles.breadcrumb}>
         <span onClick={() => navigate("/sales")} className={styles.breadLink}>
           Sales
         </span>
@@ -589,7 +589,7 @@ const ViewPostSales = () => {
         </span>
         <span className={styles.sep}>›</span>
         <span>#{data.id}</span>
-      </div>
+      </div> */}
 
       {/* ── Hero Header ── */}
       <div className={styles.hero}>

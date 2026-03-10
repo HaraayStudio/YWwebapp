@@ -147,7 +147,7 @@ const PreSalesPage = () => {
     <div className={styles.pageWrapper}>
       {/* <div className={styles.breadcrumb}>Pre-Sales &gt; Add-Pre-Sale</div> */}
 
-      <div className={styles.pageTitle}>Add Pre-Sales </div>
+      <div className={styles.pageTitle}>Add Enquiry </div>
 
       {/* ===============================
           CLIENT SECTION
@@ -253,7 +253,7 @@ const PreSalesPage = () => {
           PRE-SALES DETAILS
       =============================== */}
       <div className={styles.card}>
-        <div className={styles.sectionTitle}>Pre-Sales Details</div>
+        <div className={styles.sectionTitle}>Enquiry Details</div>
 
         <div className={styles.gridTwo}>
           <div className={styles.formGroup}>
@@ -352,7 +352,7 @@ const PreSalesPage = () => {
           onClick={handleSubmit}
           disabled={isPending}
         >
-          {isPending ? "Saving..." : "Submit Pre-Sales"}
+          {isPending ? "Saving..." : "Submit Enquiry"}
         </button>
       </div>
     </div>

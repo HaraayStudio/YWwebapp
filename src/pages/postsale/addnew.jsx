@@ -282,9 +282,9 @@ const AddPostSales = () => {
 
   return (
     <div className={styles.pageWrapper}>
-      <div className={styles.breadcrumb}>Billing &gt; Add Post-Sales</div>
+      {/* <div className={styles.breadcrumb}>Billing &gt; Add Project</div> */}
 
-      <div className={styles.pageTitle}>Create Post-Sales Entry</div>
+      <div className={styles.pageTitle}>Create Project Entry</div>
 
       {/* ===============================
           PROJECT SECTION
@@ -314,7 +314,7 @@ const AddPostSales = () => {
           POST SALES DETAILS
       =============================== */}
       <div className={styles.card}>
-        <div className={styles.sectionTitle}>Post-Sales Details</div>
+        <div className={styles.sectionTitle}>Project Details</div>
 
         <div className={styles.gridTwo}>
           <div className={styles.formGroup}>
