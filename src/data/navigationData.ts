@@ -237,7 +237,7 @@ export const navigationData: NavItem[] = [
       { id: "presales-new", label: "New", path: "/presales/new" },
       {
         id: "presales-all",
-        label: "All Presales",
+        label: "All Enquiry",
         path: "/presales/allpresales",
       },
     ],
@@ -248,7 +248,7 @@ export const navigationData: NavItem[] = [
     icon: "postSales",
     children: [
       { id: "postsales-new", label: "New", path: "/postsales/new" },
-      { id: "postsales-all", label: "All PostSales", path: "/postsales/all" },
+      { id: "postsales-all", label: "All Projects", path: "/postsales/all" },
       {
         id: "postsales-invoices",
         label: "Invoices",
@@ -263,7 +263,7 @@ export const navigationData: NavItem[] = [
     children: [
       {
         id: "manage-projects",
-        label: "Manage Projects",
+        label: "Manage Sites",
         path: "/projects/manage",
       },
       // { id: 'add-project',     label: 'Add Projects',    path: '/projects/add' },
