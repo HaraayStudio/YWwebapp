@@ -660,6 +660,7 @@ const StagesTab = ({ stages, onDocClick, onAddDoc }) => {
 // ─── Employees Tab ────────────────────────────────────────────────────────────
 const EmployeesTab = ({ employees, projectId, allEmployees }) => {
   const [showPopup, setShowPopup] = useState(false);
+ 
 
   return (
     <div>
@@ -1023,7 +1024,9 @@ export default function ViewProject() {
   // const [docPopup, setDocPopup] = useState(null);
   const [addDocStage, setAddDocStage] = useState(null);
   const { data: employeesData } = useEmployeeList();
-  const allEmployees = employeesData?.data || [];
+  const allEmployees = (employeesData || []).filter(
+    (e) => e.status === "ACTIVE",
+  );
   const p = data?.data;
 
   // Must be called unconditionally before any early returns

@@ -47,9 +47,23 @@ export default function EditSiteVisitPopup({ visit, onClose }) {
     updateVisit(
       { id: visit.id, title, description, locationNote, visitDateTime },
       {
-        onSuccess: () => {
-          if (newPhotos.length) addPhotos(visit.id, newPhotos);
-          if (newDocuments.length) addDocuments(visit.id, newDocuments);
+        onSuccess: async () => {
+          if (newPhotos.length) {
+            await addPhotos({
+              id: visit.id,
+              photos: newPhotos,
+              photoCaptions: [],
+            });
+          }
+
+          if (newDocuments.length) {
+            await addDocuments({
+              id: visit.id,
+              documents: newDocuments,
+              documentNames: newDocuments.map((f) => f.name),
+            });
+          }
+
           onClose();
         },
       },

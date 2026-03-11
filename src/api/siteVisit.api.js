@@ -106,13 +106,15 @@ export const addVisitDocuments = (id, documents, documentNames = []) => {
     formData.append("documents", file);
   });
 
-  if (documentNames.length) {
-    documentNames.forEach((name) => {
-      formData.append("documentNames", name);
-    });
-  }
+  documentNames.forEach((name) => {
+    formData.append("documentNames", name);
+  });
 
-  return api.post(`/site-visits/${id}/documents`, formData);
+  return api.post(`/site-visits/${id}/documents`, formData, {
+    headers: {
+      "Content-Type": "multipart/form-data",
+    },
+  });
 };
 /* ===============================
    DELETE PHOTO FROM SITE VISIT

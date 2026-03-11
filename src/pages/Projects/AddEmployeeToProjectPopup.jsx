@@ -1,23 +1,28 @@
 import { useState } from "react";
 import styles from "./AddEmployeeToProjectPopup.module.scss";
 import { useAddUsersToProject } from "../../api/hooks/useProject";
+import { useEmployeeList } from "../../api/hooks/useEmployees";
 
 export default function AddEmployeeToProjectPopup({
   projectId,
-  employees,
+
   onClose,
 }) {
   const { mutate, isPending } = useAddUsersToProject();
-  console.log(employees);
-
+  const { data: employeesData } = useEmployeeList();
   const [search, setSearch] = useState("");
   const [selected, setSelected] = useState([]);
+
+  const employees = (employeesData || []).filter(
+    (emp) => emp.status === "ACTIVE",
+  );
 
   const filtered = employees.filter(
     (e) =>
       e.name?.toLowerCase().includes(search.toLowerCase()) ||
       e.email?.toLowerCase().includes(search.toLowerCase()),
   );
+  console.log(employees);
 
   const toggleSelect = (emp) => {
     if (selected.find((s) => s.id === emp.id)) {
