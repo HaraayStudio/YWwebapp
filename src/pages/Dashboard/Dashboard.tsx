@@ -416,7 +416,9 @@ export default function Dashboard() {
   const stats = useMemo(() => {
     const proj = projects ?? [];
     const emps = employees ?? [];
-    const cli = clients ?? [];
+    const cli = Array.isArray(clients)
+      ? clients
+      : clients?.content || clients?.data || [];
     const activeProj = proj.filter(
       (p) => !["COMPLETED", "CANCELLED"].includes(p.projectStatus),
     );
@@ -505,9 +507,13 @@ export default function Dashboard() {
   );
 
   // ── Recent clients ────────────────────────────────────────────────────────
+  const clientList = Array.isArray(clients)
+    ? clients
+    : clients?.content || clients?.data || [];
+
   const recentClients = useMemo(
-    () => [...(clients ?? [])].slice(-6).reverse(),
-    [clients],
+    () => [...clientList].slice(-6).reverse(),
+    [clientList],
   );
 
   const greeting = useMemo(() => {

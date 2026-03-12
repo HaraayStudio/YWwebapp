@@ -120,6 +120,7 @@ export interface NavSubItem {
   id: string;
   label: string;
   path: string;
+  icon?: string;
   badge?: number;
 }
 
@@ -229,33 +230,53 @@ export const navigationData: NavItem[] = [
     icon: "dashboard",
     path: "/",
   },
+
   {
     id: "preSales",
     label: "Enquiry",
     icon: "preSales",
     children: [
-      { id: "presales-new", label: "New", path: "/presales/new" },
+      {
+        id: "presales-new",
+        label: "New",
+        path: "/presales/new",
+        icon: "plus",
+      },
       {
         id: "presales-all",
         label: "All Enquiry",
         path: "/presales/allpresales",
+        icon: "list",
       },
     ],
   },
+
   {
     id: "postSales",
     label: "Projects",
     icon: "postSales",
     children: [
-      { id: "postsales-new", label: "New", path: "/postsales/new" },
-      { id: "postsales-all", label: "All Projects", path: "/postsales/all" },
+      {
+        id: "postsales-new",
+        label: "New",
+        path: "/postsales/new",
+        icon: "plus",
+      },
+      {
+        id: "postsales-all",
+        label: "All Projects",
+        path: "/postsales/all",
+        icon: "folder",
+      },
       {
         id: "postsales-invoices",
         label: "Invoices",
         path: "/postsales/invoices",
+        icon: "invoice",
       },
     ],
   },
+
   {
     id: "projects",
     label: "Sites",
@@ -265,9 +286,8 @@ export const navigationData: NavItem[] = [
         id: "manage-projects",
         label: "Manage Sites",
         path: "/projects/manage",
+        icon: "grid",
       },
-      // { id: 'add-project',     label: 'Add Projects',    path: '/projects/add' },
-      // { id: 'all-quotations',  label: 'All Quotations',  path: '/projects/all-quotations' },
     ],
   },
 
@@ -280,21 +300,17 @@ export const navigationData: NavItem[] = [
         id: "manage-clients",
         label: "Manage Clients",
         path: "/clients/allclients",
+        icon: "users",
       },
-      { id: "add-new-client", label: "Add New Client", path: "/clients/add" },
+      {
+        id: "add-new-client",
+        label: "Add New Client",
+        path: "/clients/add",
+        icon: "userPlus",
+      },
     ],
   },
-  // {
-  //   id: 'reports',
-  //   label: 'Reports',
-  //   icon: 'reports',
-  //   children: [
-  //     { id: 'inventory-report',    label: 'Inventory Report',    path: '/reports/inventory' },
-  //     { id: 'financial-report',    label: 'Financial Report',    path: '/reports/financial' },
-  //     { id: 'heading-wise-report', label: 'Heading Wise Report', path: '/reports/heading-wise' },
-  //     { id: 'stage-wise-report',   label: 'Stage Wise Report',   path: '/reports/stage-wise' },
-  //   ],
-  // },
+
   {
     id: "accounts",
     label: "Accounts",
@@ -304,19 +320,23 @@ export const navigationData: NavItem[] = [
         id: "payment-receipts",
         label: "Payment Receipts",
         path: "/accounts/payment-receipts",
+        icon: "receipt",
       },
       {
         id: "payment-vouchers",
         label: "Payment Vouchers",
         path: "/accounts/payment-vouchers",
+        icon: "voucher",
       },
       {
         id: "bank-accounts",
         label: "Bank Accounts",
         path: "/accounts/bank-accounts",
+        icon: "bank",
       },
     ],
   },
+
   {
     id: "hr",
     label: "HR",
@@ -326,17 +346,23 @@ export const navigationData: NavItem[] = [
         id: "manage-employees",
         label: "Manage Employees",
         path: "employees/all",
+        icon: "hr",
       },
       {
         id: "active-employees",
         label: "Inactive Employees",
         path: "employees/active",
+        icon: "userOff",
       },
-      { id: "add-employee", label: "Add New Employee", path: "employees/add" },
+      {
+        id: "add-employee",
+        label: "Add New Employee",
+        path: "employees/add",
+        icon: "userPlus",
+      },
     ],
   },
 ];
-
 // ── Filter function ───────────────────────────────────────────
 function canAccess(itemId: string, role: UserRole): boolean {
   const rule = NAV_PERMISSIONS[itemId];

@@ -1,7 +1,7 @@
 import axiosInstance from "./axiosInstance";
 
 export const createPostSales = (data) =>
-  axiosInstance.post("/postsales/create", data);
+  axiosInstance.post("/postsales/createpostSales", data);
 export const convertToPostSales = (preSalesId) =>
   axiosInstance.post(
     `/postsales/converttopostSales?preSalesId=${preSalesId}`

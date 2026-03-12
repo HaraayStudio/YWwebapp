@@ -35,19 +35,14 @@
 // };
 
 // export const useAuth = () => useContext(AuthContext);
-
-import { createContext, useContext, useState, useEffect } from "react";
+import { createContext, useContext, useState } from "react";
 
 const AuthContext = createContext();
 
 export const AuthProvider = ({ children }) => {
-  const [accessToken, setAccessToken] = useState(null);
-
-  // Load token on first render
-  useEffect(() => {
-    const token = localStorage.getItem("accessToken");
-    if (token) setAccessToken(token);
-  }, []);
+  const [accessToken, setAccessToken] = useState(() => {
+    return localStorage.getItem("accessToken");
+  });
 
   const login = (accessToken, refreshToken) => {
     localStorage.setItem("accessToken", accessToken);

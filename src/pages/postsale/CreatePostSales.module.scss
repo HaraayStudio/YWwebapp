@@ -1,0 +1,808 @@
+@use "../../styles/variables" as *;
+@use "../../styles/mixins" as *;
+
+// ─── Page Shell ───────────────────────────────────────────────────────────────
+.pageWrapper {
+  padding: $spacing-xl $spacing-2xl;
+  min-height: 100vh;
+  background: linear-gradient(135deg, #f6f7ec 0%, #f9faaeb7 100%);
+  border-radius: 15px;
+
+  @include md {
+    padding: $spacing-lg $spacing-md;
+  }
+  @include sm {
+    padding: $spacing-md $spacing-sm;
+  }
+}
+
+// ─── Hero ─────────────────────────────────────────────────────────────────────
+.hero {
+  @include flex-between;
+  gap: $spacing-lg;
+  background: $color-white;
+  border-radius: $radius-2xl;
+  padding: $spacing-xl;
+  margin-bottom: $spacing-lg;
+  border: 1px solid rgba($color-gray-200, 0.6);
+  box-shadow: $shadow-card;
+  position: relative;
+  overflow: hidden;
+
+  &::before {
+    content: "";
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    height: 3px;
+    background: linear-gradient(
+      90deg,
+      $color-primary 0%,
+      $color-secondary 50%,
+      $color-info 100%
+    );
+  }
+
+  @include md {
+    flex-direction: column;
+    align-items: flex-start;
+    padding: $spacing-lg;
+  }
+}
+
+.heroLeft {
+  display: flex;
+  align-items: center;
+  gap: $spacing-lg;
+  flex: 1;
+  min-width: 0;
+
+  @include sm {
+    flex-direction: column;
+    align-items: flex-start;
+    gap: $spacing-md;
+  }
+}
+
+.heroLogoFallback {
+  width: 72px;
+  height: 72px;
+  border-radius: $radius-xl;
+  background: linear-gradient(135deg, $color-primary 0%, $color-secondary 100%);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: $font-size-xl;
+  font-weight: $font-weight-bold;
+  color: $color-white;
+  font-family: $font-family-heading;
+  letter-spacing: -0.02em;
+  flex-shrink: 0;
+}
+
+.heroInfo {
+  min-width: 0;
+  flex: 1;
+}
+
+.heroTitle {
+  font-family: $font-family-heading;
+  font-size: $font-size-2xl;
+  font-weight: $font-weight-bold;
+  color: $color-gray-900;
+  letter-spacing: -0.02em;
+  margin: 0 0 $spacing-xs;
+  @include text-truncate;
+
+  @include sm {
+    font-size: $font-size-xl;
+  }
+}
+
+.heroMeta {
+  display: flex;
+  align-items: center;
+  gap: $spacing-xs;
+  font-size: $font-size-xs;
+  color: $color-gray-500;
+  margin-bottom: $spacing-sm;
+  font-weight: $font-weight-medium;
+  font-family: monospace;
+  letter-spacing: 0.04em;
+  flex-wrap: wrap;
+}
+
+.dot {
+  color: $color-gray-300;
+}
+
+.heroBadges {
+  display: flex;
+  align-items: center;
+  gap: $spacing-sm;
+  flex-wrap: wrap;
+}
+
+.heroActions {
+  display: flex;
+  align-items: center;
+  gap: $spacing-sm;
+  flex-shrink: 0;
+
+  @include md {
+    width: 100%;
+  }
+}
+
+// ─── Badges ───────────────────────────────────────────────────────────────────
+.statusBadge {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  padding: 5px 12px;
+  border-radius: $radius-full;
+  font-size: $font-size-xs;
+  font-weight: $font-weight-semibold;
+  letter-spacing: 0.04em;
+  text-transform: uppercase;
+}
+
+.statusDot {
+  width: 6px;
+  height: 6px;
+  border-radius: 50%;
+  flex-shrink: 0;
+}
+
+.notifiedPill {
+  display: inline-flex;
+  align-items: center;
+  gap: 5px;
+  padding: 5px 12px;
+  border-radius: $radius-full;
+  font-size: $font-size-xs;
+  font-weight: $font-weight-semibold;
+  letter-spacing: 0.03em;
+}
+
+.notifiedOn {
+  background: rgba($color-success, 0.1);
+  color: darken($color-success, 10%);
+}
+.notifiedOff {
+  background: rgba($color-warning, 0.12);
+  color: darken($color-warning, 20%);
+}
+
+// ─── Buttons ──────────────────────────────────────────────────────────────────
+.primaryBtn {
+  @include button-primary;
+  font-size: $font-size-sm;
+  padding: $spacing-sm $spacing-lg;
+  display: inline-flex;
+  align-items: center;
+  gap: $spacing-xs;
+
+  &:disabled {
+    opacity: 0.6;
+    cursor: not-allowed;
+  }
+}
+
+.ghostBtn {
+  @include button-secondary;
+  font-size: $font-size-sm;
+  padding: $spacing-sm $spacing-md;
+
+  &:disabled {
+    opacity: 0.4;
+    cursor: not-allowed;
+  }
+}
+
+// ─── Form Body ────────────────────────────────────────────────────────────────
+.formBody {
+  display: flex;
+  flex-direction: column;
+  gap: $spacing-md;
+}
+
+// ─── Cards ────────────────────────────────────────────────────────────────────
+.card {
+  @include card-base;
+  padding: $spacing-xl;
+
+  @include sm {
+    padding: $spacing-lg;
+  }
+}
+
+.cardHeader {
+  display: flex;
+  align-items: center;
+  gap: $spacing-sm;
+  margin-bottom: $spacing-lg;
+  padding-bottom: $spacing-md;
+  border-bottom: 1px solid $color-gray-100;
+
+  h3 {
+    font-family: $font-family-heading;
+    font-size: $font-size-base;
+    font-weight: $font-weight-semibold;
+    color: $color-gray-800;
+    margin: 0;
+  }
+}
+
+.cardIcon {
+  font-size: 18px;
+  color: $color-primary;
+  line-height: 1;
+}
+
+// ─── Client Mode Toggle ───────────────────────────────────────────────────────
+.clientModeRow {
+  display: flex;
+  gap: $spacing-sm;
+  margin-bottom: $spacing-lg;
+  background: $color-gray-50;
+  border-radius: $radius-lg;
+  padding: 4px;
+  width: fit-content;
+}
+
+.modeBtn {
+  display: inline-flex;
+  align-items: center;
+  gap: $spacing-xs;
+  padding: 8px 20px;
+  border-radius: $radius-md;
+  border: none;
+  font-size: $font-size-sm;
+  font-weight: $font-weight-medium;
+  font-family: $font-family-primary;
+  color: $color-gray-500;
+  background: transparent;
+  cursor: pointer;
+  transition: all $transition-fast;
+  white-space: nowrap;
+
+  span {
+    font-size: 13px;
+    opacity: 0.7;
+  }
+
+  &:hover {
+    color: $color-gray-800;
+  }
+}
+
+.modeBtnActive {
+  background: $color-white;
+  color: $color-primary !important;
+  box-shadow: $shadow-sm;
+  font-weight: $font-weight-semibold;
+
+  span {
+    opacity: 1;
+  }
+}
+
+// ─── Form Grid ────────────────────────────────────────────────────────────────
+.formGrid {
+  display: grid;
+  grid-template-columns: repeat(2, 1fr);
+  gap: $spacing-lg;
+
+  @include sm {
+    grid-template-columns: 1fr;
+  }
+}
+
+.span2 {
+  grid-column: 1 / -1;
+}
+
+// ─── Form Fields ──────────────────────────────────────────────────────────────
+.formField {
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+}
+
+.fieldLabel {
+  font-size: $font-size-xs;
+  font-weight: $font-weight-semibold;
+  color: $color-gray-700;
+  text-transform: uppercase;
+  letter-spacing: 0.06em;
+  display: flex;
+  align-items: center;
+  gap: 3px;
+}
+
+.required {
+  color: $color-danger;
+}
+
+.input {
+  @include input-base;
+  font-family: $font-family-primary;
+  font-size: $font-size-sm;
+
+  &::placeholder {
+    color: $color-gray-400;
+  }
+}
+
+.inputError {
+  border-color: $color-danger !important;
+  box-shadow: 0 0 0 3px rgba($color-danger, 0.1) !important;
+}
+
+.textarea {
+  resize: vertical;
+  min-height: 100px;
+  line-height: $line-height-relaxed;
+}
+
+.fieldHint {
+  font-size: $font-size-xs;
+  color: $color-gray-400;
+  line-height: 1.4;
+}
+
+.fieldError {
+  .input {
+    border-color: $color-danger !important;
+    box-shadow: 0 0 0 3px rgba($color-danger, 0.1) !important;
+  }
+  .fieldLabel {
+    color: $color-danger;
+  }
+}
+
+.errorMsg {
+  font-size: $font-size-xs;
+  color: $color-danger;
+  font-weight: $font-weight-medium;
+}
+
+.charCount {
+  font-size: $font-size-xs;
+  color: $color-gray-400;
+  text-align: right;
+  margin-top: -($spacing-sm);
+}
+
+// ─── Client Search ────────────────────────────────────────────────────────────
+.clientSearchWrap {
+  position: relative;
+}
+
+.clientDropdown {
+  position: absolute;
+  top: calc(100% + 4px);
+  left: 0;
+  right: 0;
+  background: $color-white;
+  border: 1px solid $color-gray-200;
+  border-radius: $radius-lg;
+  box-shadow: $shadow-lg;
+  z-index: 50;
+  overflow: hidden;
+  max-height: 280px;
+  overflow-y: auto;
+  @include custom-scrollbar;
+}
+
+.dropdownEmpty {
+  padding: $spacing-lg;
+  font-size: $font-size-sm;
+  color: $color-gray-400;
+  text-align: center;
+}
+
+.clientItem {
+  display: flex;
+  align-items: center;
+  gap: $spacing-sm;
+  padding: $spacing-sm $spacing-md;
+  cursor: pointer;
+  transition: background $transition-fast;
+  border-bottom: 1px solid $color-gray-50;
+
+  &:last-child {
+    border-bottom: none;
+  }
+  &:hover {
+    background: $color-gray-50;
+  }
+}
+
+.clientAvatar {
+  width: 36px;
+  height: 36px;
+  border-radius: 50%;
+  background: linear-gradient(135deg, $color-primary, $color-info);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: $font-size-sm;
+  font-weight: $font-weight-bold;
+  color: $color-white;
+  flex-shrink: 0;
+}
+
+.clientInfo {
+  display: flex;
+  flex-direction: column;
+  gap: 2px;
+  flex: 1;
+  min-width: 0;
+
+  strong {
+    font-size: $font-size-sm;
+    color: $color-gray-800;
+    font-weight: $font-weight-semibold;
+    @include text-truncate;
+  }
+
+  span {
+    font-size: $font-size-xs;
+    color: $color-gray-400;
+    @include text-truncate;
+  }
+}
+
+.clientPhone {
+  font-size: $font-size-xs;
+  color: $color-gray-500;
+  font-family: monospace;
+  flex-shrink: 0;
+}
+
+// ─── Selected Client Card ─────────────────────────────────────────────────────
+.selectedClientCard {
+  display: flex;
+  align-items: center;
+  gap: $spacing-md;
+  padding: $spacing-md $spacing-lg;
+  background: rgba($color-primary, 0.04);
+  border: 1.5px solid rgba($color-primary, 0.25);
+  border-radius: $radius-lg;
+  transition: border-color $transition-fast;
+}
+
+.selectedAvatar {
+  width: 44px;
+  height: 44px;
+  border-radius: 50%;
+  background: linear-gradient(135deg, $color-primary, $color-info);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: $font-size-lg;
+  font-weight: $font-weight-bold;
+  color: $color-white;
+  font-family: $font-family-heading;
+  flex-shrink: 0;
+}
+
+.selectedInfo {
+  display: flex;
+  flex-direction: column;
+  gap: 2px;
+  flex: 1;
+  min-width: 0;
+}
+
+.selectedName {
+  font-size: $font-size-sm;
+  font-weight: $font-weight-semibold;
+  color: $color-gray-900;
+}
+
+.selectedMeta {
+  font-size: $font-size-xs;
+  color: $color-gray-500;
+}
+
+.clearBtn {
+  width: 28px;
+  height: 28px;
+  border-radius: 50%;
+  border: 1px solid $color-gray-200;
+  background: $color-white;
+  color: $color-gray-400;
+  font-size: 11px;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  flex-shrink: 0;
+  transition: all $transition-fast;
+
+  &:hover {
+    background: rgba($color-danger, 0.08);
+    border-color: rgba($color-danger, 0.3);
+    color: $color-danger;
+  }
+}
+
+// ─── Status Grid ──────────────────────────────────────────────────────────────
+.statusGrid {
+  display: flex;
+  flex-wrap: wrap;
+  gap: $spacing-sm;
+  margin-top: $spacing-xs;
+}
+
+.statusCard {
+  display: inline-flex;
+  align-items: center;
+  gap: 7px;
+  padding: 8px 16px;
+  border-radius: $radius-full;
+  border: 2px solid $color-gray-200;
+  background: $color-gray-50;
+  color: $color-gray-500;
+  font-size: $font-size-xs;
+  font-weight: $font-weight-semibold;
+  letter-spacing: 0.04em;
+  text-transform: uppercase;
+  cursor: pointer;
+  transition: all $transition-fast;
+  font-family: $font-family-primary;
+
+  &:hover {
+    background: $color-gray-100;
+    border-color: $color-gray-300;
+  }
+}
+
+.statusCardActive {
+  box-shadow: 0 2px 10px rgba(0, 0, 0, 0.12);
+  transform: translateY(-1px);
+}
+
+// ─── Notified Toggle ──────────────────────────────────────────────────────────
+.toggleRow {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: $spacing-md;
+  padding: $spacing-md $spacing-lg;
+  background: $color-gray-50;
+  border-radius: $radius-lg;
+  border: 1px solid $color-gray-200;
+  margin-top: $spacing-lg;
+}
+
+.toggleInfo {
+  display: flex;
+  flex-direction: column;
+  gap: 2px;
+}
+
+.toggleLabel {
+  font-size: $font-size-sm;
+  font-weight: $font-weight-semibold;
+  color: $color-gray-800;
+}
+
+.toggleHint {
+  font-size: $font-size-xs;
+  color: $color-gray-400;
+}
+
+.toggle {
+  width: 52px;
+  height: 28px;
+  border-radius: $radius-full;
+  border: none;
+  cursor: pointer;
+  position: relative;
+  flex-shrink: 0;
+  transition: background $transition-base;
+}
+
+.toggleOn {
+  background: $color-primary;
+}
+.toggleOff {
+  background: $color-gray-300;
+}
+
+.toggleThumb {
+  position: absolute;
+  top: 3px;
+  width: 22px;
+  height: 22px;
+  border-radius: 50%;
+  background: $color-white;
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.2);
+  transition: left $transition-base;
+
+  .toggleOn & {
+    left: 27px;
+  }
+  .toggleOff & {
+    left: 3px;
+  }
+}
+
+// ─── Info Box ─────────────────────────────────────────────────────────────────
+.infoBox {
+  display: flex;
+  align-items: flex-start;
+  gap: $spacing-md;
+  padding: $spacing-md $spacing-lg;
+  background: rgba($color-info, 0.06);
+  border: 1px solid rgba($color-info, 0.2);
+  border-radius: $radius-lg;
+
+  strong {
+    display: block;
+    font-size: $font-size-xs;
+    font-weight: $font-weight-semibold;
+    color: darken($color-info, 15%);
+    text-transform: uppercase;
+    letter-spacing: 0.05em;
+    margin-bottom: 2px;
+  }
+
+  p {
+    font-size: $font-size-xs;
+    color: darken($color-info, 10%);
+    margin: 0;
+    line-height: 1.5;
+  }
+}
+
+.infoBoxIcon {
+  font-size: 16px;
+  color: $color-info;
+  flex-shrink: 0;
+  margin-top: 1px;
+}
+
+// ─── API Error ────────────────────────────────────────────────────────────────
+.apiError {
+  display: flex;
+  align-items: flex-start;
+  gap: $spacing-sm;
+  padding: $spacing-md $spacing-lg;
+  background: rgba($color-danger, 0.06);
+  border: 1px solid rgba($color-danger, 0.25);
+  border-radius: $radius-lg;
+
+  span {
+    font-size: $font-size-base;
+    color: $color-danger;
+    flex-shrink: 0;
+  }
+  p {
+    font-size: $font-size-sm;
+    color: darken($color-danger, 15%);
+    margin: 0;
+  }
+}
+
+// ─── Form Actions ─────────────────────────────────────────────────────────────
+.formActions {
+  display: flex;
+  align-items: center;
+  justify-content: flex-end;
+  gap: $spacing-sm;
+  background: $color-white;
+  border-radius: $radius-xl;
+  padding: $spacing-md $spacing-xl;
+  border: 1px solid rgba($color-gray-200, 0.6);
+  box-shadow: $shadow-sm;
+
+  @include sm {
+    padding: $spacing-md;
+    flex-direction: column-reverse;
+    align-items: stretch;
+
+    button {
+      width: 100%;
+      justify-content: center;
+    }
+  }
+}
+
+// ─── Success State ────────────────────────────────────────────────────────────
+.successState {
+  @include flex-center;
+  flex-direction: column;
+  gap: $spacing-lg;
+  padding: $spacing-3xl $spacing-xl;
+  text-align: center;
+  background: $color-white;
+  border-radius: $radius-2xl;
+  border: 1px solid rgba($color-gray-200, 0.6);
+  box-shadow: $shadow-card;
+
+  h2 {
+    font-family: $font-family-heading;
+    font-size: $font-size-2xl;
+    font-weight: $font-weight-bold;
+    color: $color-gray-900;
+    margin: 0;
+  }
+
+  p {
+    font-size: $font-size-sm;
+    color: $color-gray-500;
+    margin: 0;
+  }
+}
+
+.successRing {
+  width: 80px;
+  height: 80px;
+  border-radius: 50%;
+  background: rgba($color-success, 0.1);
+  border: 2px solid rgba($color-success, 0.3);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  animation: popIn 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+
+  @keyframes popIn {
+    from {
+      opacity: 0;
+      transform: scale(0.4);
+    }
+    to {
+      opacity: 1;
+      transform: scale(1);
+    }
+  }
+}
+
+.successIconChar {
+  font-size: 36px;
+  color: $color-success;
+}
+
+.successId {
+  font-size: $font-size-sm;
+  color: $color-gray-500;
+
+  code {
+    font-family: monospace;
+    background: $color-gray-100;
+    padding: 2px 10px;
+    border-radius: $radius-md;
+    color: $color-gray-700;
+    font-weight: $font-weight-semibold;
+  }
+}
+
+.successActions {
+  display: flex;
+  gap: $spacing-sm;
+  flex-wrap: wrap;
+  justify-content: center;
+}
+
+// ─── Spinner ──────────────────────────────────────────────────────────────────
+.spinner {
+  display: inline-block;
+  width: 14px;
+  height: 14px;
+  border: 2px solid rgba($color-white, 0.4);
+  border-top-color: $color-white;
+  border-radius: 50%;
+  animation: spin 0.7s linear infinite;
+
+  @keyframes spin {
+    to {
+      transform: rotate(360deg);
+    }
+  }
+}

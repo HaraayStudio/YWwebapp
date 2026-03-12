@@ -78,8 +78,11 @@ export const useUpdateProjectStatus = () => {
 export const useProjectList = (page, size) => {
   return useQuery({
     queryKey: ["projects", page, size],
-    queryFn: () =>
-      projectApi.getAllProjects(page, size).then((res) => res.data.data),
+  queryFn: () =>
+  projectApi.getAllProjects(page, size).then((res) => {
+    console.log(res.data.data);
+    return res.data.data;
+  }),
   });
 };
 

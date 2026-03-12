@@ -30,6 +30,11 @@
   gap: $spacing-md;
   flex-wrap: wrap;
 }
+.activateBtn {
+  @extend %actionBase;
+  background: rgba($color-success, 0.1);
+  color: $color-success;
+}
 
 .pageTitle {
   font-family: $font-family-heading;

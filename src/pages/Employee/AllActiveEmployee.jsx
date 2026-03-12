@@ -1,6 +1,6 @@
 import {
   useEmployeeList,
-  useDeleteEmployee,
+  useActivateEmployee,
 } from "../../api/hooks/useEmployees";
 import styles from "./ActiveEmployees.module.scss";
 import { useNavigate } from "react-router-dom";
@@ -46,7 +46,7 @@ const ViewIcon = () => (
   </svg>
 );
 
-const DeactivateIcon = () => (
+const ActivateIcon = () => (
   <svg
     width="14"
     height="14"
@@ -58,8 +58,8 @@ const DeactivateIcon = () => (
     strokeLinejoin="round"
   >
     <circle cx="12" cy="12" r="10" />
-    <line x1="10" y1="15" x2="10" y2="9" />
-    <line x1="14" y1="15" x2="14" y2="9" />
+    <line x1="12" y1="8" x2="12" y2="16" />
+    <line x1="8" y1="12" x2="16" y2="12" />
   </svg>
 );
 
@@ -159,7 +159,7 @@ const ViewModal = ({ emp, onClose }) => {
                 .join(" ")}
             </h2>
             <span className={styles.viewModalRole}>{formatRole(emp.role)}</span>
-            <span className={styles.activePill}>ACTIVE</span>
+            <span className={styles.inactivePill}>INACTIVE</span>
           </div>
           <button className={styles.closeBtn} onClick={onClose}>
             <CloseIcon />
@@ -175,7 +175,7 @@ const ViewModal = ({ emp, onClose }) => {
                   <div key={label} className={styles.viewField}>
                     <span className={styles.viewFieldLabel}>{label}</span>
                     {isStatus ? (
-                      <span className={styles.activePill}>{value}</span>
+                      <span className={styles.inactivePill}>{value}</span>
                     ) : (
                       <span className={styles.viewFieldValue}>{value}</span>
                     )}
@@ -190,25 +190,25 @@ const ViewModal = ({ emp, onClose }) => {
   );
 };
 
-// ── Deactivate Confirm Modal ──────────────────────────────────
-const DeactivateModal = ({ emp, onCancel, onConfirm }) => (
+// ── Activate Confirm Modal ────────────────────────────────────
+const ActivateModal = ({ emp, onCancel, onConfirm }) => (
   <div className={styles.modalOverlay}>
     <div className={styles.modalBox}>
-      <div className={styles.modalIcon}>⏸️</div>
-      <h3 className={styles.modalTitle}>Deactivate Employee</h3>
+      {/* <div className={styles.modalIcon}>▶️</div> */}
+      <h3 className={styles.modalTitle}>Activate Employee</h3>
       <p className={styles.modalText}>
         This will mark{" "}
         <strong>
           {emp?.firstName} {emp?.lastName}
         </strong>{" "}
-        as Inactive. They will lose system access.
+        as Active. They will regain system access.
       </p>
       <div className={styles.modalActions}>
         <button className={styles.cancelBtn} onClick={onCancel}>
           Cancel
         </button>
         <button className={styles.confirmBtn} onClick={onConfirm}>
-          Yes, Deactivate
+          Yes, Activate
         </button>
       </div>
     </div>
@@ -216,29 +216,29 @@ const DeactivateModal = ({ emp, onCancel, onConfirm }) => (
 );
 
 // ── Main Component ────────────────────────────────────────────
-const ActiveEmployees = () => {
+const InactiveEmployees = () => {
   const { data, isLoading, isError } = useEmployeeList();
-  const { mutate: deleteEmployee } = useDeleteEmployee();
+  const { mutate: activateEmployee } = useActivateEmployee();
   const navigate = useNavigate();
 
-  const [deactivateModal, setDeactivateModal] = useState({
+  const [activateModal, setActivateModal] = useState({
     open: false,
     emp: null,
   });
   const [viewEmployee, setViewEmployee] = useState(null);
 
-  // ── Deactivate ────────────────────────────────────────────
-  const handleDeactivate = () => {
-    const loadingToast = showLoading("Deactivating employee...");
-    deleteEmployee(deactivateModal.emp.id, {
+  // ── Activate ──────────────────────────────────────────────
+  const handleActivate = () => {
+    const loadingToast = showLoading("Activating employee...");
+    activateEmployee(activateModal.emp.id, {
       onSuccess: () => {
         dismissToast(loadingToast);
-        showSuccess("Employee deactivated successfully");
-        setDeactivateModal({ open: false, emp: null });
+        showSuccess("Employee activated successfully");
+        setActivateModal({ open: false, emp: null });
       },
       onError: (error) => {
         dismissToast(loadingToast);
-        showError(error?.response?.data?.message || "Deactivation failed");
+        showError(error?.response?.data?.message || "Activation failed");
       },
     });
   };
@@ -264,19 +264,24 @@ const ActiveEmployees = () => {
     );
   }
 
-  // Only active employees
-  const activeEmployees = (data ?? []).filter((emp) => emp.status === "ACTIVE");
+  // Only inactive employees
+  const inactiveEmployees = (data ?? []).filter(
+    (emp) => emp.status === "INACTIVE",
+  );
 
   return (
     <div className={styles.pageWrapper}>
-      <div className={styles.breadcrumb}>Employees &gt; Active Employees</div>
+      {/* <div className={styles.breadcrumb}>Employees &gt; Inactive Employees</div> */}
 
       <div className={styles.pageHeader}>
         <div>
-          <h1 className={styles.pageTitle}>Active Employees</h1>
+          <h1 className={styles.pageTitle}>Inactive Employees</h1>
+          <br />
           <p className={styles.pageSubtitle}>
-            <span className={styles.countBadge}>{activeEmployees.length}</span>
-            members currently active
+            <span className={styles.countBadge}>
+              {inactiveEmployees.length}
+            </span>
+            members currently inactive
           </p>
         </div>
         <button
@@ -287,12 +292,12 @@ const ActiveEmployees = () => {
         </button>
       </div>
 
-      {activeEmployees.length === 0 ? (
+      {inactiveEmployees.length === 0 ? (
         <div className={styles.emptyState}>
           <div className={styles.emptyIcon}>👨‍💼</div>
-          <div className={styles.emptyTitle}>No Active Employees</div>
+          <div className={styles.emptyTitle}>No Inactive Employees</div>
           <div className={styles.emptyText}>
-            All employees are currently inactive.
+            All employees are currently active.
           </div>
         </div>
       ) : (
@@ -311,7 +316,7 @@ const ActiveEmployees = () => {
               </tr>
             </thead>
             <tbody>
-              {activeEmployees.map((emp, index) => (
+              {inactiveEmployees.map((emp, index) => (
                 <tr key={emp.id}>
                   <td className={styles.indexCell}>{index + 1}</td>
                   <td>
@@ -348,12 +353,12 @@ const ActiveEmployees = () => {
                       </button>
 
                       <button
-                        className={styles.deactivateBtn}
-                        onClick={() => setDeactivateModal({ open: true, emp })}
-                        title="Deactivate"
+                        className={styles.activateBtn}
+                        onClick={() => setActivateModal({ open: true, emp })}
+                        title="Activate"
                       >
-                        <DeactivateIcon />
-                        <span>Deactivate</span>
+                        <ActivateIcon />
+                        <span>Activate</span>
                       </button>
                     </div>
                   </td>
@@ -364,7 +369,7 @@ const ActiveEmployees = () => {
 
           {/* Mobile Cards */}
           <div className={styles.mobileCards}>
-            {activeEmployees.map((emp) => (
+            {inactiveEmployees.map((emp) => (
               <div key={emp.id} className={styles.mobileCard}>
                 <div className={styles.mobileCardHeader}>
                   <div className={styles.mobileCardMeta}>
@@ -375,7 +380,7 @@ const ActiveEmployees = () => {
                       {formatRole(emp.role)}
                     </span>
                   </div>
-                  <span className={styles.activePill}>ACTIVE</span>
+                  <span className={styles.inactivePill}>INACTIVE</span>
                 </div>
 
                 <div className={styles.mobileCardBody}>
@@ -397,10 +402,10 @@ const ActiveEmployees = () => {
                     <EditIcon /> Edit
                   </button>
                   <button
-                    className={styles.deactivateBtn}
-                    onClick={() => setDeactivateModal({ open: true, emp })}
+                    className={styles.activateBtn}
+                    onClick={() => setActivateModal({ open: true, emp })}
                   >
-                    <DeactivateIcon /> Deactivate
+                    <ActivateIcon /> Activate
                   </button>
                 </div>
               </div>
@@ -414,16 +419,16 @@ const ActiveEmployees = () => {
         <ViewModal emp={viewEmployee} onClose={() => setViewEmployee(null)} />
       )}
 
-      {/* Deactivate Modal */}
-      {deactivateModal.open && (
-        <DeactivateModal
-          emp={deactivateModal.emp}
-          onCancel={() => setDeactivateModal({ open: false, emp: null })}
-          onConfirm={handleDeactivate}
+      {/* Activate Modal */}
+      {activateModal.open && (
+        <ActivateModal
+          emp={activateModal.emp}
+          onCancel={() => setActivateModal({ open: false, emp: null })}
+          onConfirm={handleActivate}
         />
       )}
     </div>
   );
 };
 
-export default ActiveEmployees;
+export default InactiveEmployees;

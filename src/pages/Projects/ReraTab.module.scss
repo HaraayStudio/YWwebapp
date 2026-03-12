@@ -1,0 +1,419 @@
+@use "../../styles/variables" as *;
+@use "../../styles/mixins" as *;
+
+// ─── Wrapper ──────────────────────────────────────────────────────────────────
+.wrapper {
+  display: flex;
+  flex-direction: column;
+  gap: $spacing-md;
+  animation: fadeUp 0.2s ease;
+}
+
+@keyframes fadeUp {
+  from { opacity: 0; transform: translateY(8px); }
+  to   { opacity: 1; transform: translateY(0); }
+}
+
+// ─── Section header (title + button row) ─────────────────────────────────────
+.sectionHeader {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: $spacing-md;
+
+  h3 {
+    font-family: $font-family-heading;
+    font-size: $font-size-lg;
+    font-weight: $font-weight-bold;
+    color: $color-gray-900;
+    margin: 0;
+    letter-spacing: -0.01em;
+  }
+}
+
+// ─── Buttons ──────────────────────────────────────────────────────────────────
+.primaryBtn {
+  @include button-primary;
+  font-size: $font-size-sm;
+  padding: $spacing-sm $spacing-lg;
+}
+
+.addReraBtn {
+  display: inline-flex;
+  align-items: center;
+  gap: $spacing-xs;
+  padding: $spacing-sm $spacing-lg;
+  border-radius: $radius-lg;
+  border: 1.5px dashed rgba($color-primary, 0.4);
+  background: rgba($color-primary, 0.04);
+  color: $color-primary;
+  font-size: $font-size-sm;
+  font-weight: $font-weight-semibold;
+  cursor: pointer;
+  transition: all $transition-fast;
+
+  &:hover {
+    background: rgba($color-primary, 0.1);
+    border-color: $color-primary;
+  }
+}
+
+// ─── Cards ────────────────────────────────────────────────────────────────────
+.card {
+  @include card-base;
+  padding: $spacing-xl;
+
+  @include sm { padding: $spacing-lg; }
+}
+
+.cardHeader {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: $spacing-sm;
+  margin-bottom: $spacing-lg;
+  padding-bottom: $spacing-md;
+  border-bottom: 1px solid $color-gray-100;
+}
+
+// ─── Section title row (icon + label + count pill) ────────────────────────────
+.sectionTitle {
+  display: flex;
+  align-items: center;
+  gap: $spacing-sm;
+  font-family: $font-family-heading;
+  font-size: $font-size-base;
+  font-weight: $font-weight-semibold;
+  color: $color-gray-800;
+}
+
+.sectionIcon {
+  font-size: 16px;
+  color: $color-primary;
+  line-height: 1;
+}
+
+.countPill {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  min-width: 22px;
+  height: 22px;
+  padding: 0 6px;
+  background: rgba($color-primary, 0.1);
+  color: $color-primary;
+  border-radius: $radius-full;
+  font-size: $font-size-xs;
+  font-weight: $font-weight-bold;
+}
+
+// ─── Active / Inactive badge ──────────────────────────────────────────────────
+.badge {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  padding: 5px 12px;
+  border-radius: $radius-full;
+  font-size: $font-size-xs;
+  font-weight: $font-weight-semibold;
+  letter-spacing: 0.04em;
+  text-transform: uppercase;
+}
+
+.badgeDot {
+  width: 6px;
+  height: 6px;
+  border-radius: 50%;
+  flex-shrink: 0;
+}
+
+.badgeActive {
+  background: rgba($color-success, 0.1);
+  color: darken($color-success, 10%);
+
+  .badgeDot { background: $color-success; }
+}
+
+.badgeInactive {
+  background: rgba($color-danger, 0.1);
+  color: darken($color-danger, 10%);
+
+  .badgeDot { background: $color-danger; }
+}
+
+// ─── Info Grid (2-col field layout) ──────────────────────────────────────────
+.infoGrid {
+  display: grid;
+  grid-template-columns: repeat(2, 1fr);
+  gap: $spacing-md $spacing-xl;
+
+  @include sm { grid-template-columns: 1fr; }
+}
+
+.infoField {
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+}
+
+.fieldLabel {
+  font-size: $font-size-xs;
+  color: $color-gray-400;
+  font-weight: $font-weight-medium;
+  text-transform: uppercase;
+  letter-spacing: 0.06em;
+}
+
+.fieldValue {
+  font-size: $font-size-sm;
+  color: $color-gray-800;
+  font-weight: $font-weight-medium;
+}
+
+.mono {
+  font-family: monospace;
+  font-size: $font-size-xs;
+  letter-spacing: 0.06em;
+  color: $color-gray-700;
+}
+
+// ─── Certificate list ─────────────────────────────────────────────────────────
+.certList {
+  display: flex;
+  flex-direction: column;
+  gap: $spacing-sm;
+}
+
+.certCard {
+  border: 1.5px solid $color-gray-200;
+  border-radius: $radius-lg;
+  overflow: hidden;
+  transition: box-shadow $transition-fast, border-color $transition-fast;
+
+  &:hover { box-shadow: $shadow-md; }
+}
+
+.certCardOpen {
+  border-color: rgba($color-primary, 0.3);
+  box-shadow: $shadow-md;
+}
+
+.certCardHeader {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: $spacing-md $spacing-lg;
+  cursor: pointer;
+  user-select: none;
+  background: $color-white;
+  transition: background $transition-fast;
+
+  &:hover { background: $color-gray-50; }
+}
+
+.certCardLeft {
+  display: flex;
+  align-items: center;
+  gap: $spacing-sm;
+  flex-wrap: wrap;
+}
+
+.certCardRight {
+  display: flex;
+  align-items: center;
+  gap: $spacing-sm;
+  flex-shrink: 0;
+}
+
+.certIndex {
+  font-family: monospace;
+  font-size: $font-size-xs;
+  font-weight: $font-weight-bold;
+  color: $color-primary;
+  background: rgba($color-primary, 0.08);
+  padding: 2px 8px;
+  border-radius: $radius-full;
+  letter-spacing: 0.04em;
+}
+
+.certDate {
+  font-size: $font-size-sm;
+  font-weight: $font-weight-semibold;
+  color: $color-gray-800;
+}
+
+.fileChip {
+  font-size: $font-size-xs;
+  color: $color-info;
+  background: rgba($color-info, 0.08);
+  padding: 2px 10px;
+  border-radius: $radius-full;
+  font-weight: $font-weight-medium;
+}
+
+.chevron {
+  font-size: 10px;
+  color: $color-gray-400;
+}
+
+.certCardBody {
+  padding: $spacing-md $spacing-lg $spacing-lg;
+  border-top: 1px solid $color-gray-100;
+  background: $color-gray-50;
+  display: flex;
+  flex-direction: column;
+  gap: $spacing-md;
+}
+
+.remarksBlock {
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+}
+
+.remarksText {
+  font-size: $font-size-sm;
+  color: $color-gray-700;
+  line-height: $line-height-relaxed;
+  margin: 0;
+  white-space: pre-wrap;
+}
+
+.fileLink {
+  display: inline-flex;
+  align-items: center;
+  gap: $spacing-xs;
+  font-size: $font-size-sm;
+  font-weight: $font-weight-medium;
+  color: $color-info;
+  text-decoration: none;
+  padding: $spacing-xs $spacing-md;
+  border-radius: $radius-md;
+  background: rgba($color-info, 0.06);
+  border: 1px solid rgba($color-info, 0.2);
+  width: fit-content;
+  transition: all $transition-fast;
+
+  &:hover {
+    background: rgba($color-info, 0.12);
+    border-color: rgba($color-info, 0.4);
+  }
+}
+
+// ─── Quarter Update Grid ──────────────────────────────────────────────────────
+.quarterGrid {
+  display: grid;
+  grid-template-columns: repeat(2, 1fr);
+  gap: $spacing-md;
+
+  @include sm { grid-template-columns: 1fr; }
+}
+
+.quarterCard {
+  border: 1.5px solid $color-gray-200;
+  border-radius: $radius-lg;
+  overflow: hidden;
+  transition: box-shadow $transition-fast;
+
+  &:hover { box-shadow: $shadow-md; }
+}
+
+.quarterHeader {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: $spacing-sm $spacing-md;
+  background: rgba($color-primary, 0.05);
+  border-bottom: 1px solid $color-gray-200;
+}
+
+.quarterLabel {
+  font-size: $font-size-xs;
+  font-weight: $font-weight-bold;
+  color: $color-primary;
+  text-transform: uppercase;
+  letter-spacing: 0.08em;
+}
+
+.quarterDate {
+  font-size: $font-size-xs;
+  color: $color-gray-500;
+  font-family: monospace;
+  letter-spacing: 0.04em;
+}
+
+.quarterBody {
+  padding: $spacing-md;
+  display: flex;
+  flex-direction: column;
+  gap: $spacing-sm;
+  background: $color-white;
+}
+
+.quarterRow {
+  display: flex;
+  flex-direction: column;
+  gap: 3px;
+}
+
+.quarterValue {
+  font-size: $font-size-sm;
+  color: $color-gray-800;
+  font-weight: $font-weight-medium;
+  line-height: 1.4;
+}
+
+// ─── Empty states ─────────────────────────────────────────────────────────────
+.emptyState {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: $spacing-md;
+  padding: $spacing-3xl $spacing-xl;
+  background: $color-white;
+  border-radius: $radius-xl;
+  border: 1px dashed $color-gray-200;
+  text-align: center;
+
+  p {
+    font-size: $font-size-sm;
+    color: $color-gray-400;
+    margin: 0;
+  }
+}
+
+.emptyStateIcon {
+  font-size: 40px;
+  opacity: 0.3;
+}
+
+.emptyBlock {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: $spacing-sm;
+  padding: $spacing-xl;
+  background: $color-gray-50;
+  border-radius: $radius-lg;
+  border: 1px dashed $color-gray-200;
+  text-align: center;
+
+  p {
+    font-size: $font-size-sm;
+    color: $color-gray-400;
+    margin: 0;
+  }
+}
+
+.emptyIcon {
+  font-size: 28px;
+  opacity: 0.35;
+}
+
+// ─── Skeleton loaders ─────────────────────────────────────────────────────────
+.skeletonCard {
+  @include skeleton;
+  height: 180px;
+  border-radius: $radius-xl;
+}

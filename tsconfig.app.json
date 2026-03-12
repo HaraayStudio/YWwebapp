@@ -27,5 +27,5 @@
       "@/*": ["./src/*"]
     }
   },
-  "include": ["src"]
+  "include": ["src", "c:/Users/Prajwal/Downloads/pixel-perfect-pages-main/YWweb/src/components/WhatsAppButton.jsx"]
 }

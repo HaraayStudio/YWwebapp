@@ -16,6 +16,13 @@
     padding: $spacing-md $spacing-sm;
   }
 }
+.primaryBtn {
+  @include button-primary;
+  font-size: $font-size-sm;
+  padding: $spacing-sm $spacing-lg;
+  width: 100% !important;
+  max-width: 150px;
+}
 
 // ─── Breadcrumb ───────────────────────────────────────────────────────────────
 .breadcrumb {

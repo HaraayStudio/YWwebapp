@@ -16,7 +16,7 @@ import EditProject from "./pages/Projects/Editproject";
 import Structure from "./pages/Projects/Structure";
 import Documents from "./pages/Projects/Documents";
 
-import Postsale from "./pages/postsale/addnew.jsx";
+import Postsale from "./pages/postsale/Createpostsales.jsx";
 import AllPostSales from "./pages/postsale/AllPostsales.jsx";
 import ViewPostSale from "./pages/postsale/ViewPostSale.jsx";
 
@@ -104,6 +104,7 @@ const App = () => (
             <Route path="*" element={<NotFound />} />
           </Route>
         </Routes>
+        {/* ← ADD HERE — outside <Routes>, inside <BrowserRouter> */}
       </BrowserRouter>
     </AuthProvider>
   </QueryClientProvider>
