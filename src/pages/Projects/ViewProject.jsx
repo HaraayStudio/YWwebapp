@@ -1967,10 +1967,10 @@ const EmployeesTab = ({ employees, projectId, allEmployees }) => {
         {employees?.map((emp) => (
           <div key={emp.id} className={styles.empCard}>
             <div className={styles.empAvatar}>{emp.name?.charAt(0)}</div>
-            {console.log(emp)};
+            {console.log(emp)}
             <div>
-              <div>{emp.name}</div>
-              <div>{emp.email}</div>
+              <div>{emp.fullName}</div>
+              {/* <div>{emp.email}</div> */}
             </div>
           </div>
         ))}
