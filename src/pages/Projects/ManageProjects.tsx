@@ -28,8 +28,8 @@ const AllProjects = () => {
     <div className={styles.pageWrapper}>
       {/* Header */}
       <div className={styles.header}>
-        <h1>All Projects</h1>
-        <p>{projects.length} projects</p>
+        <h1>All Sites</h1>
+        <p>{projects.length} sites</p>
       </div>
 
       {/* Project Grid */}
@@ -52,7 +52,7 @@ const AllProjects = () => {
 
             <div className={styles.projectInfo}>
               <h3>{project.projectName}</h3>
-              <span>Project #{project.id}</span>
+              <span>Site #{project.id}</span>
             </div>
           </div>
         ))}

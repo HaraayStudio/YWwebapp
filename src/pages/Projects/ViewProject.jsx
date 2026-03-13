@@ -2393,7 +2393,7 @@ export default function ViewProject() {
           </div>
           <div className={styles.heroMeta}>
             <h1 className={styles.heroTitle}>
-              {p.projectName || `Project #${p.projectId}`}
+              {p.projectName || `Site #${p.projectId}`}
             </h1>
             <div className={styles.heroChips}>
               {p.projectCode && (
@@ -2427,7 +2427,7 @@ export default function ViewProject() {
               className={styles.primaryBtn}
               onClick={() => navigate(`/projects/edit/${p.projectId}`)}
             >
-              ⬡ Edit Project
+              ⬡ Edit Site
             </button>
             <strong>{fmt(p.projectCreatedDateTime)}</strong>
           </div>
