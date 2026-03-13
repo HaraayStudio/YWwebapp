@@ -146,6 +146,7 @@ const NAV_PERMISSIONS: Record<string, UserRole[] | "ALL"> = {
     "SR_ARCHITECT",
     "JR_ARCHITECT",
     "SR_ENGINEER",
+    "HR",
   ],
   "add-project": ["ADMIN", "CO_FOUNDER", "SR_ARCHITECT"],
   "all-quotations": ["ADMIN", "CO_FOUNDER", "SR_ARCHITECT", "JR_ARCHITECT"],
