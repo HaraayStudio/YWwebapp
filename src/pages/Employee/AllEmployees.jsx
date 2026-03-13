@@ -350,7 +350,7 @@ const AllEmployees = () => {
 
   return (
     <div className={styles.pageWrapper}>
-      <div className={styles.breadcrumb}>Employees &gt; All Employees</div>
+      {/* <div className={styles.breadcrumb}>Employees &gt; All Employees</div> */}
 
       <div className={styles.pageHeader}>
         <div>

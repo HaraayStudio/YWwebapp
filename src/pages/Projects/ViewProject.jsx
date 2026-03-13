@@ -2371,7 +2371,7 @@ export default function ViewProject() {
   return (
     <div className={styles.pageWrapper}>
       {/* Breadcrumb */}
-      <nav className={styles.breadcrumb}>
+      {/* <nav className={styles.breadcrumb}>
         <span
           className={styles.breadLink}
           onClick={() => navigate("/projects")}
@@ -2380,7 +2380,7 @@ export default function ViewProject() {
         </span>
         <span className={styles.sep}>›</span>
         <span>{p.projectName || `NoProjectName`}</span>
-      </nav>
+      </nav> */}
       {/* ── Hero Header ── */}
       <div className={styles.hero}>
         <div className={styles.heroLeft}>

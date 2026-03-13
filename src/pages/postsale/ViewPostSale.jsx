@@ -306,7 +306,7 @@ const ProjectTab = ({ project, navigate }) => {
             className={styles.primaryBtn}
             onClick={() => navigate(`/projects//view/${project.projectId}`)}
           >
-            ⬡ View Full Project
+            ⬡ View Full Site
           </button>
         </div>
       </div>

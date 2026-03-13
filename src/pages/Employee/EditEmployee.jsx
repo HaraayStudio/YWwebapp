@@ -90,7 +90,7 @@ const EditEmployee = () => {
 
   return (
     <div className={styles.pageWrapper}>
-      <div className={styles.breadcrumb}>Employees &gt; Edit Employee</div>
+      {/* <div className={styles.breadcrumb}>Employees &gt; Edit Employee</div> */}
 
       <div className={styles.pageTitle}>Edit Employee</div>
 

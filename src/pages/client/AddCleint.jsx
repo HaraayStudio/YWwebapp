@@ -50,7 +50,7 @@ const AddClient = () => {
 
   return (
     <div className={styles.pageWrapper}>
-      <div className={styles.breadcrumb}>Clients &gt; Add Client</div>
+      {/* <div className={styles.breadcrumb}>Clients &gt; Add Client</div> */}
 
       <div className={styles.pageTitle}>Create New Client</div>
 

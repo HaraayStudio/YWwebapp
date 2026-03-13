@@ -205,7 +205,7 @@ const AllPreSales = () => {
       {isModalOpen && (
         <div className={styles.modalOverlay}>
           <div className={styles.modalBox}>
-            <h3>Convert to PostSales</h3>
+            <h3>Convert to Project</h3>
 
             <p>
               Are you sure you want to convert this PreSales into PostSales?

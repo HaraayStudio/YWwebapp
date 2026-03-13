@@ -59,7 +59,7 @@ const AddEmployee = () => {
 
   return (
     <div className={styles.pageWrapper}>
-      <div className={styles.breadcrumb}>Employees &gt; Add Employee</div>
+      {/* <div className={styles.breadcrumb}>Employees &gt; Add Employee</div> */}
 
       <div className={styles.pageTitle}>Create New Employee</div>
 

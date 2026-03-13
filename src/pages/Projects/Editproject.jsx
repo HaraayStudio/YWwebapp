@@ -1136,7 +1136,7 @@ export default function EditProject() {
           <button
             type="button"
             className={styles.cancelBtn}
-            onClick={() => navigate(`/projects/${projectId}`)}
+            onClick={() => navigate(`/projects/view/${projectId}`)}
           >
             Cancel
           </button>
