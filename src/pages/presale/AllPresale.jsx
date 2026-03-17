@@ -769,11 +769,11 @@ const AllPreSales = () => {
   };
 
   const handleConfirmConvert = () => {
-    const loadingToast = showLoading("Converting to PostSales...");
+    const loadingToast = showLoading("Converting to Project...");
     mutate(selectedId, {
       onSuccess: () => {
         dismissToast(loadingToast);
-        showSuccess("Converted to PostSales successfully");
+        showSuccess("Converted to Project successfully");
         setIsModalOpen(false);
       },
       onError: (error) => {
@@ -922,9 +922,7 @@ const AllPreSales = () => {
         <div className={styles.modalOverlay}>
           <div className={styles.modalBox}>
             <h3>Convert to Project</h3>
-            <p>
-              Are you sure you want to convert this PreSales into PostSales?
-            </p>
+            <p>Are you sure you want to convert this PreSales into Project?</p>
             <div className={styles.modalActions}>
               <button
                 className={styles.cancelBtn}
