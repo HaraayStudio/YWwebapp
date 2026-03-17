@@ -2158,7 +2158,7 @@ const StructuresTab = ({ structures, navigate, projectId }) => {
   return (
     <div className={styles.structList}>
       <div className={styles.sectionHeader}>
-        <h3>Structures</h3>
+        <br />
         <button
           className={styles.primaryBtn}
           onClick={() => navigate(`/projects/${projectId}/structure`)}
@@ -2166,7 +2166,7 @@ const StructuresTab = ({ structures, navigate, projectId }) => {
           + Add Structure
         </button>
       </div>
-
+      <br />
       <div className={styles.structGrid}>
         {structures.map((s, i) => {
           const STRUCT_ICONS = {
