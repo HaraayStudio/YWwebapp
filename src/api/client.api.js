@@ -27,17 +27,17 @@ export const deleteClient = (id) =>
    UPDATE CLIENT
 =============================== */
 export const updateClient = (id, data) =>
-  api.put("/clients/updateclient", data, {
+  axiosInstance.put("/clients/updateclient", data, {
     params: { id },
   });
 // ── GET CLIENT PROFILE ─────────────────────────
 export const getClientProfile = () => {
-  return api.get("/clients/getclient");
+  return axiosInstance.get("/clients/getclient");
 };
 /* ===============================
    UPDATE MY PASSWORD
 =============================== */
 export const updateMyPassword = (oldPassword, newPassword) =>
-  api.put("/clients/updatemypassword", null, {
+  axiosInstance.put("/clients/updatemypassword", null, {
     params: { oldPassword, newPassword },
   });
