@@ -63,6 +63,9 @@ const EditClient = () => {
       newErrors.phone = "Phone must be 10 digits";
     }
 
+    // ❌ GST validation removed
+    // ❌ PAN validation removed
+
     setErrors(newErrors);
     return Object.keys(newErrors).length === 0;
   };
@@ -186,9 +189,7 @@ const EditClient = () => {
           <div className={styles.formGroup}>
             <label className={styles.label}>GST Certificate</label>
             <input
-              className={`${styles.input} ${
-                errors.GSTCertificate ? styles.errorInput : ""
-              }`}
+              className={styles.input}
               value={formData.GSTCertificate}
               onChange={(e) =>
                 handleChange("GSTCertificate", e.target.value.toUpperCase())
@@ -203,9 +204,7 @@ const EditClient = () => {
           <div className={styles.formGroup}>
             <label className={styles.label}>PAN</label>
             <input
-              className={`${styles.input} ${
-                errors.PAN ? styles.errorInput : ""
-              }`}
+              className={styles.input}
               value={formData.PAN}
               onChange={(e) =>
                 handleChange("PAN", e.target.value.toUpperCase())
