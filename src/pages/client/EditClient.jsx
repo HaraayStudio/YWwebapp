@@ -145,7 +145,7 @@ const EditClient = () => {
   =============================== */
   return (
     <div className={styles.pageWrapper}>
-      <div className={styles.breadcrumb}>Clients &gt; Edit Client</div>
+      {/* <div className={styles.breadcrumb}>Clients &gt; Edit Client</div> */}
       <div className={styles.pageTitle}>Edit Client</div>
 
       <div className={styles.card}>

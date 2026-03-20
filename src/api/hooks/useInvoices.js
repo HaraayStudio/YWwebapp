@@ -1,99 +1,16 @@
-// import { useQuery, useMutation, useQueryClient } from "@tanstack/react-query";
-// import * as invoiceApi from "../invoice.api";
-
-// /* ===============================
-//    GET PROFORMAS BY POSTSALES
-// ================================ */
-
-// export const useProformas = (postSalesId) => {
-//   return useQuery({
-//     queryKey: ["proformas", postSalesId],
-//     queryFn: () =>
-//       invoiceApi
-//         .getProformasByPostSales(postSalesId)
-//         .then((res) => res.data.data),
-//     enabled: !!postSalesId,
-//   });
-// };
-
-// /* ===============================
-//    CREATE PROFORMA
-// ================================ */
-
-// export const useCreateProforma = () => {
-//   const qc = useQueryClient();
-
-//   return useMutation({
-//     mutationFn: ({ postSalesId, data }) =>
-//       invoiceApi.createProforma(postSalesId, data),
-
-//     onSuccess: (_, variables) => {
-//       qc.invalidateQueries({
-//         queryKey: ["proformas", variables.postSalesId],
-//       });
-//     },
-//   });
-// };
-
-// /* ===============================
-//    CONVERT TO TAX INVOICE
-// ================================ */
-
-// export const useConvertToTax = () => {
-//   const qc = useQueryClient();
-
-//   return useMutation({
-//     mutationFn: (proformaId) =>
-//       invoiceApi.convertToTaxInvoice(proformaId),
-
-//     onSuccess: () => {
-//       qc.invalidateQueries({ queryKey: ["taxInvoices"] });
-//     },
-//   });
-// };
-
-// /* ===============================
-//    GET TAX INVOICES
-// ================================ */
-
-// export const useTaxInvoices = (postSalesId) => {
-//   return useQuery({
-//     queryKey: ["taxInvoices", postSalesId],
-//     queryFn: () =>
-//       invoiceApi
-//         .getTaxInvoicesByPostSales(postSalesId)
-//         .then((res) => res.data.data),
-//     enabled: !!postSalesId,
-//   });
-// };
-
-// /* ===============================
-//    MARK TAX INVOICE PAID
-// ================================ */
-
-// export const useMarkInvoicePaid = () => {
-//   const qc = useQueryClient();
-
-//   return useMutation({
-//     mutationFn: ({ invoiceNumber, paymentData }) =>
-//       invoiceApi.makeInvoicePaid(invoiceNumber, paymentData),
-
-//     onSuccess: () => {
-//       qc.invalidateQueries({ queryKey: ["taxInvoices"] });
-//     },
-//   });
-// };
 import { useQuery, useMutation, useQueryClient } from "@tanstack/react-query";
 import * as invoiceApi from "../invoice.api";
 
-const PROFORMA_KEY = "proformaInvoices";
-const TAX_KEY      = "taxInvoices";
+const PROFORMA_KEY  = "proformaInvoices";
+const TAX_KEY       = "taxInvoices";
+// ── KEY FIX: also invalidate the parent postSales query so the parent
+// component (which passes invoices as a prop) also refetches fresh data.
+const POST_SALES_KEY = "postSales";
 
 // ═══════════════════════════════════════════════════════
 // PROFORMA INVOICE HOOKS
 // ═══════════════════════════════════════════════════════
 
-// GET all proformas for a post-sales record
 export const useProformasByPostSales = (postSalesId) => {
   return useQuery({
     queryKey: [PROFORMA_KEY, postSalesId],
@@ -105,7 +22,6 @@ export const useProformasByPostSales = (postSalesId) => {
   });
 };
 
-// GET single proforma by id
 export const useProformaById = (id) => {
   return useQuery({
     queryKey: [PROFORMA_KEY, "single", id],
@@ -115,7 +31,6 @@ export const useProformaById = (id) => {
   });
 };
 
-// CREATE proforma
 export const useCreateProforma = () => {
   const queryClient = useQueryClient();
   return useMutation({
@@ -123,44 +38,53 @@ export const useCreateProforma = () => {
       invoiceApi.createProforma(postSalesId, data),
     onSuccess: (_, variables) => {
       queryClient.invalidateQueries({ queryKey: [PROFORMA_KEY, variables.postSalesId] });
+      // Invalidate parent so the invoice list in PostSalesDetail updates too
+      queryClient.invalidateQueries({ queryKey: [POST_SALES_KEY] });
     },
   });
 };
 
-// UPDATE proforma
 export const useUpdateProforma = () => {
   const queryClient = useQueryClient();
   return useMutation({
     mutationFn: ({ id, data }) => invoiceApi.updateProforma(id, data),
     onSuccess: () => {
       queryClient.invalidateQueries({ queryKey: [PROFORMA_KEY] });
+      queryClient.invalidateQueries({ queryKey: [POST_SALES_KEY] });
     },
   });
 };
 
-// MARK SENT
+// ── MARK SENT ──────────────────────────────────────────────────────────────────
 export const useMarkProformaSent = () => {
   const queryClient = useQueryClient();
   return useMutation({
     mutationFn: (id) => invoiceApi.markProformaSent(id),
     onSuccess: () => {
       queryClient.invalidateQueries({ queryKey: [PROFORMA_KEY] });
+      // Invalidate postSales so parent component gets fresh invoice list
+      queryClient.invalidateQueries({ queryKey: [POST_SALES_KEY] });
     },
   });
 };
 
-// MARK PAID
+// ── MARK PAID ──────────────────────────────────────────────────────────────────
+// This is the one that wasn't syncing — it was only invalidating [PROFORMA_KEY]
+// but the parent reads from [POST_SALES_KEY]. Now invalidates both.
 export const useMarkProformaPaid = () => {
   const queryClient = useQueryClient();
   return useMutation({
     mutationFn: (id) => invoiceApi.markProformaPaid(id),
     onSuccess: () => {
       queryClient.invalidateQueries({ queryKey: [PROFORMA_KEY] });
+      // ✅ FIX: parent PostSalesDetail uses postSales query — must invalidate it
+      queryClient.invalidateQueries({ queryKey: [POST_SALES_KEY] });
     },
   });
 };
 
-// CONVERT → TAX INVOICE
+// ── CONVERT TO TAX ─────────────────────────────────────────────────────────────
+// Same issue — needed [POST_SALES_KEY] invalidation
 export const useConvertToTaxInvoice = () => {
   const queryClient = useQueryClient();
   return useMutation({
@@ -168,17 +92,19 @@ export const useConvertToTaxInvoice = () => {
     onSuccess: () => {
       queryClient.invalidateQueries({ queryKey: [PROFORMA_KEY] });
       queryClient.invalidateQueries({ queryKey: [TAX_KEY] });
+      // ✅ FIX: parent must also refetch to show the new tax invoice
+      queryClient.invalidateQueries({ queryKey: [POST_SALES_KEY] });
     },
   });
 };
 
-// DELETE proforma
 export const useDeleteProforma = () => {
   const queryClient = useQueryClient();
   return useMutation({
     mutationFn: (id) => invoiceApi.deleteProforma(id),
     onSuccess: () => {
       queryClient.invalidateQueries({ queryKey: [PROFORMA_KEY] });
+      queryClient.invalidateQueries({ queryKey: [POST_SALES_KEY] });
     },
   });
 };
@@ -187,7 +113,6 @@ export const useDeleteProforma = () => {
 // TAX INVOICE HOOKS
 // ═══════════════════════════════════════════════════════
 
-// GET all tax invoices for a post-sales record
 export const useTaxInvoicesByPostSales = (postSalesId) => {
   return useQuery({
     queryKey: [TAX_KEY, postSalesId],
@@ -199,7 +124,6 @@ export const useTaxInvoicesByPostSales = (postSalesId) => {
   });
 };
 
-// GET single tax invoice by id
 export const useTaxInvoiceById = (id) => {
   return useQuery({
     queryKey: [TAX_KEY, "single", id],
@@ -209,7 +133,6 @@ export const useTaxInvoiceById = (id) => {
   });
 };
 
-// CREATE tax invoice
 export const useCreateTaxInvoice = () => {
   const queryClient = useQueryClient();
   return useMutation({
@@ -217,44 +140,44 @@ export const useCreateTaxInvoice = () => {
       invoiceApi.createTaxInvoice(postSalesId, data),
     onSuccess: (_, variables) => {
       queryClient.invalidateQueries({ queryKey: [TAX_KEY, variables.postSalesId] });
+      queryClient.invalidateQueries({ queryKey: [POST_SALES_KEY] });
     },
   });
 };
 
-// MARK TAX SENT
 export const useMarkTaxInvoiceSent = () => {
   const queryClient = useQueryClient();
   return useMutation({
     mutationFn: (id) => invoiceApi.markTaxInvoiceSent(id),
     onSuccess: () => {
       queryClient.invalidateQueries({ queryKey: [TAX_KEY] });
+      queryClient.invalidateQueries({ queryKey: [POST_SALES_KEY] });
     },
   });
 };
 
-// MARK TAX PAID
 export const useMarkTaxInvoicePaid = () => {
   const queryClient = useQueryClient();
   return useMutation({
     mutationFn: (id) => invoiceApi.markTaxInvoicePaid(id),
     onSuccess: () => {
       queryClient.invalidateQueries({ queryKey: [TAX_KEY] });
+      queryClient.invalidateQueries({ queryKey: [POST_SALES_KEY] });
     },
   });
 };
 
-// DELETE tax invoice
 export const useDeleteTaxInvoice = () => {
   const queryClient = useQueryClient();
   return useMutation({
     mutationFn: (id) => invoiceApi.deleteTaxInvoice(id),
     onSuccess: () => {
       queryClient.invalidateQueries({ queryKey: [TAX_KEY] });
+      queryClient.invalidateQueries({ queryKey: [POST_SALES_KEY] });
     },
   });
 };
 
-// MAKE INVOICE PAID (custom payment recording)
 export const useMakeInvoicePaid = () => {
   const queryClient = useQueryClient();
   return useMutation({
@@ -262,6 +185,7 @@ export const useMakeInvoicePaid = () => {
       invoiceApi.makeInvoicePaid(invoiceNumber, paymentData),
     onSuccess: () => {
       queryClient.invalidateQueries({ queryKey: [TAX_KEY] });
+      queryClient.invalidateQueries({ queryKey: [POST_SALES_KEY] });
     },
   });
 };

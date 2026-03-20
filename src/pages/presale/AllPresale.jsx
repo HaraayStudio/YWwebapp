@@ -939,8 +939,8 @@ const PreSaleDetailPopup = ({ item, onClose }) => {
                   <DetailField label="SR Number" value={item.srNumber} mono />
                   <DetailField label="Person Name" value={item.personName} />
                   <DetailField label="Client" value={item.client?.name} />
-                  <DetailField label="Email" value={item.email} />
-                  <DetailField label="Phone" value={item.phone} />
+                  <DetailField label="Email" value={item.client?.email} />
+                  <DetailField label="Phone" value={item.client?.phone} />
                   <DetailField label="Date" value={fmt(item.dateTime)} />
                 </div>
               </div>
@@ -951,7 +951,7 @@ const PreSaleDetailPopup = ({ item, onClose }) => {
                     label="Approached Via"
                     value={item.approachedVia}
                   />
-                  <DetailField label="Source" value={item.source} />
+                  {/* <DetailField label="Source" value={item.source} />
                   <DetailField
                     label="Project Interest"
                     value={item.projectInterest}
@@ -964,7 +964,7 @@ const PreSaleDetailPopup = ({ item, onClose }) => {
                     label="Follow-up Date"
                     value={fmt(item.followUpDate)}
                   />
-                  <DetailField label="Assigned To" value={item.assignedTo} />
+                  <DetailField label="Assigned To" value={item.assignedTo} /> */}
                 </div>
               </div>
               {(item.requirements || item.remarks || item.notes) && (

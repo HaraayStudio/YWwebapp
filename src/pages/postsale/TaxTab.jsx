@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import { useNavigate } from "react-router-dom";
 import {
   useCreateTaxInvoice,
@@ -14,6 +14,7 @@ import {
   dismissToast,
 } from "../../components/Notification/toast";
 
+import { usePostSalesById } from "../../api/hooks/usePostSales";
 // ─── Helpers ──────────────────────────────────────────────────────────────────
 const fmt = (dt) => {
   if (!dt) return "—";
@@ -60,6 +61,7 @@ const MODE_CFG = {
 // ─── Add Tax Invoice Popup ────────────────────────────────────────────────────
 const AddTaxInvoicePopup = ({ postSalesId, onClose }) => {
   const { mutate: createTaxInvoice, isPending } = useCreateTaxInvoice();
+  const { data: postSalesData } = usePostSalesById(postSalesId);
 
   const [form, setForm] = useState({
     clientName: "",
@@ -74,7 +76,19 @@ const AddTaxInvoicePopup = ({ postSalesId, onClose }) => {
     amountInWords: "",
     validTill: "",
   });
+  useEffect(() => {
+    console.log(postSalesData?.client);
+    const client = postSalesData?.client;
 
+    if (!client) return;
+
+    setForm((prev) => ({
+      ...prev,
+      clientName: client.name || "",
+      clientEmail: client.email || "",
+      clientPhone: client.phone || "",
+    }));
+  }, [postSalesData]);
   const onChange = (e) => setForm({ ...form, [e.target.name]: e.target.value });
 
   // Auto-calculate gross when net/cgst/sgst change
@@ -674,7 +688,7 @@ const TaxCard = ({ inv, index, postSalesId, onDeleted }) => {
             <div className={styles.workflowBar}>
               <div className={styles.workflowSteps}>
                 {/* Step 1: Mark Sent */}
-                <div className={styles.workflowStep}>
+                {/* <div className={styles.workflowStep}>
                   <button
                     className={`${styles.actionBtnBlue} ${!canSend ? styles.actionBtnDone : ""}`}
                     onClick={() =>
@@ -696,22 +710,18 @@ const TaxCard = ({ inv, index, postSalesId, onDeleted }) => {
                     )}
                   </button>
                   <span className={styles.workflowArrow}>→</span>
-                </div>
+                </div> */}
 
                 {/* Step 2: Mark Paid */}
                 <div className={styles.workflowStep}>
                   <button
                     className={`${styles.actionBtnGreen} ${inv.paid ? styles.actionBtnDone : ""}`}
-                    onClick={() =>
-                      canPaid && doAction(markPaid, inv.id, "Mark Paid")
-                    }
-                    disabled={!!actionLoading || !canPaid}
+                    onClick={() => doAction(markPaid, inv.id, "Mark Paid")}
+                    disabled={!!actionLoading || inv.outstanding !== 0}
                     title={
-                      inv.paid
-                        ? "Already fully paid"
-                        : inv.status === "DRAFT"
-                          ? "Mark as Sent first before marking as paid"
-                          : "Mark this tax invoice as paid"
+                      inv.outstanding !== 0
+                        ? "Outstanding must be 0 to mark as paid"
+                        : "Mark as paid"
                     }
                   >
                     {actionLoading === "Mark Paid" ? (

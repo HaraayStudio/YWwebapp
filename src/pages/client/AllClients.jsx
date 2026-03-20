@@ -33,7 +33,7 @@ const AllClientsPage = () => {
   return (
     <div className={styles.pageWrapper}>
       {/* Breadcrumb */}
-      <div className={styles.breadcrumb}>Sales &gt; Clients</div>
+      {/* <div className={styles.breadcrumb}>Sales &gt; Clients</div> */}
 
       {/* Header */}
       <div className={styles.pageHeader}>

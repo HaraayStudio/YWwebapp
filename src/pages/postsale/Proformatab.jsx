@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import {
   useCreateProforma,
   useDeleteProforma,
@@ -6,6 +6,7 @@ import {
   useMarkProformaPaid,
   useConvertToTaxInvoice,
 } from "../../api/hooks/useInvoices";
+import { usePostSalesById } from "../../api/hooks/usePostSales";
 import styles from "./ProformaTab.module.scss";
 import {
   showSuccess,
@@ -34,7 +35,6 @@ const fmtMoney = (val) => {
   }).format(val);
 };
 
-// Status config — DRAFT → SENT → PAID → CONVERTED
 const STATUS_CFG = {
   DRAFT: { bg: "#f3f4f6", color: "#374151", dot: "#9ca3af", label: "Draft" },
   SENT: { bg: "#dbeafe", color: "#1e40af", dot: "#3b82f6", label: "Sent" },
@@ -50,6 +50,7 @@ const STATUS_CFG = {
 // ─── Add Proforma Popup ───────────────────────────────────────────────────────
 const AddProformaPopup = ({ postSalesId, onClose }) => {
   const { mutate: createProforma, isPending } = useCreateProforma();
+  const { data: postSalesData } = usePostSalesById(postSalesId);
 
   const [form, setForm] = useState({
     clientName: "",
@@ -65,9 +66,19 @@ const AddProformaPopup = ({ postSalesId, onClose }) => {
     validTill: "",
   });
 
+  useEffect(() => {
+    const client = postSalesData?.client;
+    if (!client) return;
+    setForm((prev) => ({
+      ...prev,
+      clientName: client.name || "",
+      clientEmail: client.email || "",
+      clientPhone: client.phone || "",
+    }));
+  }, [postSalesData]);
+
   const onChange = (e) => setForm({ ...form, [e.target.name]: e.target.value });
 
-  // Auto-calculate gross when net/cgst/sgst change
   const handleAmountChange = (e) => {
     const updated = { ...form, [e.target.name]: e.target.value };
     const net = parseFloat(updated.netAmount) || 0;
@@ -114,7 +125,6 @@ const AddProformaPopup = ({ postSalesId, onClose }) => {
   return (
     <div className={styles.overlay} onClick={onClose}>
       <div className={styles.popup} onClick={(e) => e.stopPropagation()}>
-        {/* Header */}
         <div className={styles.popupHeader}>
           <div className={styles.popupHeaderLeft}>
             <span className={styles.popupHeaderIcon}>◑</span>
@@ -130,9 +140,7 @@ const AddProformaPopup = ({ postSalesId, onClose }) => {
           </button>
         </div>
 
-        {/* Body */}
         <div className={styles.popupBody}>
-          {/* Client Details */}
           <div className={styles.formSection}>
             <div className={styles.formSectionTitle}>👤 Client Details</div>
             <div className={styles.formGrid}>
@@ -192,7 +200,6 @@ const AddProformaPopup = ({ postSalesId, onClose }) => {
             </div>
           </div>
 
-          {/* Amount Details */}
           <div className={styles.formSection}>
             <div className={styles.formSectionTitle}>
               💰 Amount Details
@@ -259,7 +266,6 @@ const AddProformaPopup = ({ postSalesId, onClose }) => {
               </div>
             </div>
 
-            {/* Visual breakdown preview */}
             {(form.netAmount || form.cgstAmount || form.sgstAmount) && (
               <div className={styles.amountPreview}>
                 <span className={styles.amountPreviewItem}>
@@ -295,7 +301,6 @@ const AddProformaPopup = ({ postSalesId, onClose }) => {
             )}
           </div>
 
-          {/* Validity */}
           <div className={styles.formSection}>
             <div className={styles.formSectionTitle}>📅 Validity</div>
             <div className={styles.formGrid}>
@@ -313,7 +318,6 @@ const AddProformaPopup = ({ postSalesId, onClose }) => {
           </div>
         </div>
 
-        {/* Footer */}
         <div className={styles.popupFooter}>
           <button className={styles.cancelBtn} onClick={onClose}>
             Cancel
@@ -337,10 +341,20 @@ const AddProformaPopup = ({ postSalesId, onClose }) => {
   );
 };
 
-// ─── Proforma Invoice Card ────────────────────────────────────────────────────
-const ProformaCard = ({ inv, index, onDeleted }) => {
+// ─── Proforma Card ────────────────────────────────────────────────────────────
+const ProformaCard = ({ inv: initialInv, index, postSalesId, onRefetch }) => {
   const [expanded, setExpanded] = useState(false);
   const [actionLoading, setActionLoading] = useState(null);
+  // ── Optimistic local state ──────────────────────────────────────────────
+  // We keep a local copy of the invoice so we can update it instantly
+  // without waiting for the parent to refetch from the server.
+  const [inv, setInv] = useState(initialInv);
+
+  // Keep in sync if parent re-renders with fresh data from server
+  useEffect(() => {
+    setInv(initialInv);
+  }, [initialInv]);
+
   const navigate = useNavigate();
   const { mutate: markSent } = useMarkProformaSent();
   const { mutate: markPaid } = useMarkProformaPaid();
@@ -350,24 +364,63 @@ const ProformaCard = ({ inv, index, onDeleted }) => {
   const cfg = STATUS_CFG[inv.status] || STATUS_CFG.DRAFT;
   const isConverted = inv.convertedToTaxInvoice === true;
   const canSend = inv.status === "DRAFT";
-  const canPaid = inv.status === "SENT";
   const canConvert = inv.paid && !isConverted;
 
-  const doAction = (mutate, id, label, opts = {}) => {
+  // ── doAction ──────────────────────────────────────────────────────────────
+  // 1. Shows loading toast
+  // 2. On success → applies optimistic patch to local state immediately
+  // 3. Then calls onRefetch() so the parent also gets fresh data from server
+  const doAction = (
+    mutateFn,
+    id,
+    label,
+    optimisticPatch = {},
+    extraOpts = {},
+  ) => {
     setActionLoading(label);
     const t = showLoading(`${label}...`);
-    mutate(id, {
-      onSuccess: () => {
+
+    mutateFn(id, {
+      onSuccess: (responseData) => {
         dismissToast(t);
         showSuccess(`${label} successful`);
         setActionLoading(null);
-        opts.onSuccess?.();
+
+        // ── Optimistic update — apply patch instantly ──────────────────────
+        // If the server returned the updated invoice, use that; otherwise
+        // apply our local patch so the button/badge flips right away.
+        const serverInv =
+          responseData?.data?.data || responseData?.data || null;
+        if (serverInv && serverInv.id === inv.id) {
+          setInv(serverInv);
+        } else {
+          setInv((prev) => ({ ...prev, ...optimisticPatch }));
+        }
+
+        // Tell parent to refetch so the list stays in sync
+        onRefetch?.();
+        extraOpts.onSuccess?.();
       },
       onError: (err) => {
         dismissToast(t);
         showError(err?.response?.data?.message || `${label} failed`);
         setActionLoading(null);
       },
+    });
+  };
+
+  const handleMarkSent = () => {
+    doAction(markSent, inv.id, "Mark Sent", { status: "SENT" });
+  };
+
+  const handleMarkPaid = () => {
+    doAction(markPaid, inv.id, "Mark Paid", { paid: true, status: "PAID" });
+  };
+
+  const handleConvert = () => {
+    doAction(convert, inv.id, "Convert to Tax Invoice", {
+      convertedToTaxInvoice: true,
+      status: "CONVERTED",
     });
   };
 
@@ -378,18 +431,25 @@ const ProformaCard = ({ inv, index, onDeleted }) => {
       )
     )
       return;
-    doAction(deleteProforma, inv.id, "Delete", { onSuccess: onDeleted });
+    doAction(
+      deleteProforma,
+      inv.id,
+      "Delete",
+      {},
+      {
+        onSuccess: () => onRefetch?.(),
+      },
+    );
   };
 
   return (
     <div
       className={`${styles.card} ${expanded ? styles.cardExpanded : ""} ${inv.paid ? styles.cardPaid : ""} ${isConverted ? styles.cardConverted : ""}`}
     >
-      {/* Left accent */}
       <div className={styles.cardAccent} style={{ background: cfg.dot }} />
 
       <div className={styles.cardInner}>
-        {/* ── Row 1: Number + Status + Amount + Toggle ── */}
+        {/* Row 1 */}
         <div className={styles.cardTop} onClick={() => setExpanded(!expanded)}>
           <div className={styles.cardTopLeft}>
             <span className={styles.cardIndex}>#{index + 1}</span>
@@ -412,8 +472,16 @@ const ProformaCard = ({ inv, index, onDeleted }) => {
             {isConverted && (
               <span className={styles.convertedBadge}>⇄ Converted to Tax</span>
             )}
+            {/* Paid badge — shown inline for instant feedback */}
+            {inv.paid && !isConverted && (
+              <span
+                className={styles.notifiedBadge}
+                style={{ background: "#dcfce7", color: "#14532d" }}
+              >
+                ✓ Paid
+              </span>
+            )}
           </div>
-
           <div className={styles.cardTopRight}>
             <span className={styles.grossAmount}>
               {fmtMoney(inv.grossAmount)}
@@ -426,7 +494,7 @@ const ProformaCard = ({ inv, index, onDeleted }) => {
           </div>
         </div>
 
-        {/* ── Row 2: Meta chips ── */}
+        {/* Row 2: Meta */}
         <div className={styles.cardMeta}>
           {inv.issueDate && (
             <span className={styles.metaChip}>🗓 {fmt(inv.issueDate)}</span>
@@ -446,7 +514,7 @@ const ProformaCard = ({ inv, index, onDeleted }) => {
           )}
         </div>
 
-        {/* ── Expanded body ── */}
+        {/* Expanded body */}
         {expanded && (
           <div className={styles.cardBody}>
             {/* Tax breakdown */}
@@ -482,7 +550,7 @@ const ProformaCard = ({ inv, index, onDeleted }) => {
               </div>
             </div>
 
-            {/* Client + Dates grid */}
+            {/* Detail grid */}
             <div className={styles.detailGrid}>
               <div className={styles.detailSection}>
                 <div className={styles.detailSectionTitle}>👤 Client</div>
@@ -532,6 +600,17 @@ const ProformaCard = ({ inv, index, onDeleted }) => {
                   <span>Notified</span>
                   <span>{inv.notified ? "✓ Yes" : "No"}</span>
                 </div>
+                <div className={styles.detailRow}>
+                  <span>Paid</span>
+                  <span
+                    style={{
+                      color: inv.paid ? "#14532d" : "#6b7280",
+                      fontWeight: 600,
+                    }}
+                  >
+                    {inv.paid ? "✓ Yes" : "No"}
+                  </span>
+                </div>
                 {isConverted && (
                   <div className={styles.detailRow}>
                     <span>Tax Invoice</span>
@@ -543,7 +622,6 @@ const ProformaCard = ({ inv, index, onDeleted }) => {
               </div>
             </div>
 
-            {/* Amount in words */}
             {inv.amountInWords && (
               <div className={styles.amountWords}>
                 <span className={styles.amountWordsLabel}>In Words:</span>
@@ -551,20 +629,18 @@ const ProformaCard = ({ inv, index, onDeleted }) => {
               </div>
             )}
 
-            {/* ── Workflow Action Bar ── */}
+            {/* Workflow Action Bar */}
             <div className={styles.workflowBar}>
               <div className={styles.workflowSteps}>
                 {/* Step 1: Mark Sent */}
-                <div className={styles.workflowStep}>
+                {/* <div className={styles.workflowStep}>
                   <button
                     className={`${styles.actionBtnBlue} ${!canSend ? styles.actionBtnDone : ""}`}
-                    onClick={() =>
-                      canSend && doAction(markSent, inv.id, "Mark Sent")
-                    }
+                    onClick={handleMarkSent}
                     disabled={!!actionLoading || !canSend}
                     title={
                       inv.status !== "DRAFT"
-                        ? `Already ${cfg.label} — cannot mark sent again`
+                        ? `Already ${cfg.label}`
                         : "Send this proforma to the client"
                     }
                   >
@@ -577,27 +653,18 @@ const ProformaCard = ({ inv, index, onDeleted }) => {
                     )}
                   </button>
                   <span className={styles.workflowArrow}>→</span>
-                </div>
-                <button
-                  className={styles.actionBtnView}
-                  onClick={() =>
-                    navigate(`/postsales/${postSalesId}/invoice/${inv.id}/tax`)
-                  }
-                >
-                  👁 View Invoice
-                </button>
+                </div> */}
+
                 {/* Step 2: Mark Paid */}
                 <div className={styles.workflowStep}>
                   <button
                     className={`${styles.actionBtnGreen} ${inv.paid ? styles.actionBtnDone : ""}`}
-                    onClick={() => doAction(markPaid, inv.id, "Mark Paid")}
-                    // disabled={!!actionLoading || !canPaid}
+                    onClick={handleMarkPaid}
+                    disabled={!!actionLoading || inv.paid}
                     title={
                       inv.paid
                         ? "Already marked as paid"
-                        : inv.status === "DRAFT"
-                          ? "Mark as Sent first before marking as paid"
-                          : "Mark this proforma as paid by client"
+                        : "Mark this proforma as paid"
                     }
                   >
                     {actionLoading === "Mark Paid" ? (
@@ -611,19 +678,17 @@ const ProformaCard = ({ inv, index, onDeleted }) => {
                   <span className={styles.workflowArrow}>→</span>
                 </div>
 
-                {/* Step 3: Convert to Tax Invoice */}
+                {/* Step 3: Convert to Tax */}
                 <div className={styles.workflowStep}>
                   <button
                     className={`${styles.actionBtnPurple} ${isConverted ? styles.actionBtnDone : ""}`}
-                    onClick={() =>
-                      doAction(convert, inv.id, "Convert to Tax Invoice")
-                    }
-                    disabled={!canConvert}
+                    onClick={handleConvert}
+                    disabled={!!actionLoading || !canConvert}
                     title={
                       isConverted
                         ? `Already converted — Tax Invoice #${inv.taxInvoiceId}`
                         : !inv.paid
-                          ? "Proforma must be marked as Paid before converting to Tax Invoice"
+                          ? "Mark as Paid first before converting"
                           : "Convert this paid proforma to a tax invoice"
                     }
                   >
@@ -638,23 +703,32 @@ const ProformaCard = ({ inv, index, onDeleted }) => {
                 </div>
               </div>
 
-              {/* Delete — right side */}
-              <button
-                className={styles.actionBtnDelete}
-                onClick={handleDelete}
-                disabled={!!actionLoading || isConverted}
-                title={
-                  isConverted
-                    ? "Cannot delete — already converted to a tax invoice"
-                    : "Permanently delete this proforma invoice"
-                }
-              >
-                {actionLoading === "Delete" ? (
-                  <span className={styles.btnSpinner} />
-                ) : (
-                  "🗑"
-                )}
-              </button>
+              <div>
+                <button
+                  className={styles.actionBtnPurple}
+                  onClick={() =>
+                    navigate(`/postsales/${postSalesId}/invoice/${inv.id}/tax`)
+                  }
+                >
+                  👁 View Invoice
+                </button>
+                <button
+                  className={styles.actionBtnDelete}
+                  onClick={handleDelete}
+                  disabled={!!actionLoading || isConverted}
+                  title={
+                    isConverted
+                      ? "Cannot delete — already converted"
+                      : "Delete this proforma"
+                  }
+                >
+                  {actionLoading === "Delete" ? (
+                    <span className={styles.btnSpinner} />
+                  ) : (
+                    "🗑"
+                  )}
+                </button>
+              </div>
             </div>
           </div>
         )}
@@ -683,7 +757,7 @@ export default function ProformaTab({ postSalesId, invoices = [], onRefetch }) {
 
   return (
     <div className={styles.wrapper}>
-      {/* ── Top bar ── */}
+      {/* Top bar */}
       <div className={styles.topBar}>
         <div className={styles.topBarLeft}>
           <h3 className={styles.sectionTitle}>Proforma Invoices</h3>
@@ -696,7 +770,7 @@ export default function ProformaTab({ postSalesId, invoices = [], onRefetch }) {
         </button>
       </div>
 
-      {/* ── Stats row ── */}
+      {/* Stats row */}
       {invoices.length > 0 && (
         <div className={styles.statsRow}>
           <div className={styles.statCard}>
@@ -724,7 +798,7 @@ export default function ProformaTab({ postSalesId, invoices = [], onRefetch }) {
         </div>
       )}
 
-      {/* ── Invoice list / Empty ── */}
+      {/* Invoice list / Empty */}
       {invoices.length === 0 ? (
         <div className={styles.emptyState}>
           <span className={styles.emptyIcon}>◑</span>
@@ -746,13 +820,14 @@ export default function ProformaTab({ postSalesId, invoices = [], onRefetch }) {
               key={inv.id}
               inv={inv}
               index={i}
-              onDeleted={onRefetch}
+              postSalesId={postSalesId}
+              onRefetch={onRefetch}
             />
           ))}
         </div>
       )}
 
-      {/* ── Add Popup ── */}
+      {/* Add Popup */}
       {showAddPopup && (
         <AddProformaPopup postSalesId={postSalesId} onClose={handleCloseAdd} />
       )}
