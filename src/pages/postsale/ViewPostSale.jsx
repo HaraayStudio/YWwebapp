@@ -706,6 +706,7 @@ import styles from "./ViewPostSales.module.scss";
 import ProformaTab from "./Proformatab";
 import TaxTab from "./TaxTab";
 import PaymentsTab from "./Paymentstab";
+import { canManage } from "../../hooks/roleCheck";
 // ─── Helpers ──────────────────────────────────────────────────────────────────
 const fmt = (dt) => {
   if (!dt) return "—";
@@ -986,12 +987,14 @@ const ProjectTab = ({ project, navigate }) => {
           />
         </div>
         <div className={styles.projectActions}>
-          <button
-            className={styles.primaryBtn}
-            onClick={() => navigate(`/projects/edit/${project.projectId}`)}
-          >
-            ⬡ Edit Project
-          </button>
+          {canManage() && (
+            <button
+              className={styles.primaryBtn}
+              onClick={() => navigate(`/projects/edit/${project.projectId}`)}
+            >
+              ⬡ Edit Project
+            </button>
+          )}
           <button
             className={styles.primaryBtn}
             onClick={() => navigate(`/projects/view/${project.projectId}`)}

@@ -193,6 +193,7 @@ const PreSalesPage = () => {
                 <label className={styles.label}>Phone</label>
                 <input
                   className={styles.input}
+                  maxLength={10}
                   placeholder="Enter phone"
                   onChange={(e) => handleClientChange("phone", e.target.value)}
                 />

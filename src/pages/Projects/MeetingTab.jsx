@@ -13,7 +13,7 @@ import {
   dismissToast,
 } from "../../components/Notification/toast";
 import { use } from "react";
-
+import { canManage, isClient } from "../../hooks/roleCheck";
 // ── Constants ──────────────────────────────────────────────────────────────────
 const MEETING_TYPES = [
   { value: "CALL", label: "📞 Call" },
@@ -693,9 +693,14 @@ export default function MeetingsTab({ projectId, project }) {
             <span className={styles.countChip}>{meetings.length}</span>
           )}
         </div>
-        <button className={styles.addBtn} onClick={() => setShowAddPopup(true)}>
-          + Schedule Meeting
-        </button>
+        {!isClient() && (
+          <button
+            className={styles.addBtn}
+            onClick={() => setShowAddPopup(true)}
+          >
+            + Schedule Meeting
+          </button>
+        )}
       </div>
 
       {/* Stats */}
@@ -766,13 +771,15 @@ export default function MeetingsTab({ projectId, project }) {
           <p className={styles.emptyHint}>
             Schedule your first meeting for this project
           </p>
-          <button
-            className={styles.addBtn}
-            style={{ marginTop: "12px" }}
-            onClick={() => setShowAddPopup(true)}
-          >
-            + Schedule Meeting
-          </button>
+          {!isClient() && (
+            <button
+              className={styles.addBtn}
+              style={{ marginTop: "12px" }}
+              onClick={() => setShowAddPopup(true)}
+            >
+              + Schedule Meeting
+            </button>
+          )}
         </div>
       ) : filtered.length === 0 ? (
         <div className={styles.emptyState}>

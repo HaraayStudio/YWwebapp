@@ -15,7 +15,7 @@ import {
   dismissToast,
 } from "../../components/Notification/toast";
 import { useNavigate } from "react-router-dom";
-
+import { canManage } from "../../hooks/roleCheck";
 // ─── Helpers ──────────────────────────────────────────────────────────────────
 const fmt = (dt) => {
   if (!dt) return "—";
@@ -765,9 +765,14 @@ export default function ProformaTab({ postSalesId, invoices = [], onRefetch }) {
             <span className={styles.countChip}>{invoices.length}</span>
           )}
         </div>
-        <button className={styles.addBtn} onClick={() => setShowAddPopup(true)}>
-          + New Proforma
-        </button>
+        {canManage() && (
+          <button
+            className={styles.addBtn}
+            onClick={() => setShowAddPopup(true)}
+          >
+            + New Proforma
+          </button>
+        )}
       </div>
 
       {/* Stats row */}
@@ -806,12 +811,14 @@ export default function ProformaTab({ postSalesId, invoices = [], onRefetch }) {
           <p className={styles.emptyHint}>
             Create a proforma invoice to start the billing process
           </p>
-          <button
-            className={styles.addBtn}
-            onClick={() => setShowAddPopup(true)}
-          >
-            + New Proforma
-          </button>
+          {canManage() && (
+            <button
+              className={styles.addBtn}
+              onClick={() => setShowAddPopup(true)}
+            >
+              + New Proforma
+            </button>
+          )}
         </div>
       ) : (
         <div className={styles.cardList}>

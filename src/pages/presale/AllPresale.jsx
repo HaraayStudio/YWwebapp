@@ -718,6 +718,8 @@ import {
   useDeletePreSales,
   useUpdatePreSalesStatus,
 } from "../../api/hooks/usePreSales";
+import { useClientById } from "../../api/hooks/useClient";
+
 import {
   useQuotationsByPreSale,
   useCreateQuotation,
@@ -734,7 +736,7 @@ import {
   showLoading,
   dismissToast,
 } from "../../components/Notification/toast";
-
+import { canManage } from "../../hooks/roleCheck";
 // ─── Helpers ──────────────────────────────────────────────────────────────────
 const fmt = (dt) => {
   if (!dt) return "—";
@@ -1007,12 +1009,14 @@ const PreSaleDetailPopup = ({ item, onClose }) => {
                     </span>
                   )}
                 </span>
-                <button
-                  className={styles.addQuotBtn}
-                  onClick={() => setShowQuotationForm(!showQuotationForm)}
-                >
-                  {showQuotationForm ? "✕ Cancel" : "+ Add Quotation"}
-                </button>
+                {canManage() && (
+                  <button
+                    className={styles.addQuotBtn}
+                    onClick={() => setShowQuotationForm(!showQuotationForm)}
+                  >
+                    {showQuotationForm ? "✕ Cancel" : "+ Add Quotation"}
+                  </button>
+                )}
               </div>
 
               {/* Add Form */}
@@ -1208,23 +1212,26 @@ const PreSaleDetailPopup = ({ item, onClose }) => {
                               View Details →
                             </button>
 
-                            {!isAccepted && (
+                            {!isAccepted &&
+                              canManage(
+                                <button
+                                  className={styles.quotAcceptBtn}
+                                  onClick={(e) => handleAccept(e, q.id)}
+                                >
+                                  ✓ Accept
+                                </button>,
+                              )}
+
+                            {canManage() && (
                               <button
-                                className={styles.quotAcceptBtn}
-                                onClick={(e) => handleAccept(e, q.id)}
+                                className={styles.quotDeleteBtn}
+                                onClick={(e) =>
+                                  handleDelete(e, q.id, q.quotationNumber)
+                                }
                               >
-                                ✓ Accept
+                                Delete
                               </button>
                             )}
-
-                            <button
-                              className={styles.quotDeleteBtn}
-                              onClick={(e) =>
-                                handleDelete(e, q.id, q.quotationNumber)
-                              }
-                            >
-                              Delete
-                            </button>
                           </div>
                         </div>
                       </div>
@@ -1257,7 +1264,7 @@ const DetailField = ({ label, value, mono, full }) => (
 
 // ─── Main ─────────────────────────────────────────────────────────────────────
 const AllPreSales = () => {
-  const { data, isLoading, isError } = usePreSalesList();
+  // const { data, isLoading, isError } = usePreSalesList();
   const navigate = useNavigate();
   const { mutate: deletePreSale } = useDeletePreSales();
   const { mutate } = useConvertToPostSales();
@@ -1265,7 +1272,15 @@ const AllPreSales = () => {
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [selectedId, setSelectedId] = useState(null);
   const [viewItem, setViewItem] = useState(null);
+  const user = JSON.parse(localStorage.getItem("user"));
+  const userId = user?.userId;
+  console.log(userId);
 
+  const { data: clientResponse, isLoading: clientLoading } =
+    useClientById(userId);
+
+  const data = clientResponse?.preSales;
+  console.log(data);
   const handleConfirmConvert = () => {
     const t = showLoading("Converting to Project...");
     mutate(selectedId, {
@@ -1281,18 +1296,18 @@ const AllPreSales = () => {
     });
   };
 
-  if (isLoading)
-    return (
-      <div className={styles.pageWrapper}>
-        <div className={styles.loading}>Loading PreSales...</div>
-      </div>
-    );
-  if (isError)
-    return (
-      <div className={styles.pageWrapper}>
-        <div className={styles.error}>Something went wrong.</div>
-      </div>
-    );
+  // if (isLoading)
+  //   return (
+  //     <div className={styles.pageWrapper}>
+  //       <div className={styles.loading}>Loading PreSales...</div>
+  //     </div>
+  //   );
+  // if (isError)
+  //   return (
+  //     <div className={styles.pageWrapper}>
+  //       <div className={styles.error}>Something went wrong.</div>
+  //     </div>
+  //   );
 
   return (
     <div className={styles.pageWrapper}>
@@ -1319,7 +1334,7 @@ const AllPreSales = () => {
                 <th>Approached Via</th>
                 <th>Status</th>
                 <th>Date</th>
-                <th>Convert</th>
+                {canManage() && <th>Convert</th>}
                 <th>Actions</th>
               </tr>
             </thead>
@@ -1338,17 +1353,19 @@ const AllPreSales = () => {
                     </span>
                   </td>
                   <td>{new Date(item.dateTime).toLocaleDateString()}</td>
-                  <td>
-                    <button
-                      className={styles.convertBtn}
-                      onClick={() => {
-                        setSelectedId(item.srNumber);
-                        setIsModalOpen(true);
-                      }}
-                    >
-                      Convert
-                    </button>
-                  </td>
+                  {canManage() && (
+                    <td>
+                      <button
+                        className={styles.convertBtn}
+                        onClick={() => {
+                          setSelectedId(item.srNumber);
+                          setIsModalOpen(true);
+                        }}
+                      >
+                        Convert
+                      </button>
+                    </td>
+                  )}
                   <td>
                     <div className={styles.actionButtons}>
                       <button
@@ -1357,23 +1374,27 @@ const AllPreSales = () => {
                       >
                         View
                       </button>
-                      <button
-                        className={styles.editBtn}
-                        onClick={() =>
-                          navigate(`/presales/edit/${item.srNumber}`)
-                        }
-                      >
-                        Edit
-                      </button>
-                      <button
-                        className={styles.deleteBtn}
-                        onClick={() =>
-                          window.confirm("Are you sure?") &&
-                          deletePreSale(item.srNumber)
-                        }
-                      >
-                        Delete
-                      </button>
+                      {canManage() && (
+                        <button
+                          className={styles.editBtn}
+                          onClick={() =>
+                            navigate(`/presales/edit/${item.srNumber}`)
+                          }
+                        >
+                          Edit
+                        </button>
+                      )}
+                      {canManage() && (
+                        <button
+                          className={styles.deleteBtn}
+                          onClick={() =>
+                            window.confirm("Are you sure?") &&
+                            deletePreSale(item.srNumber)
+                          }
+                        >
+                          Delete
+                        </button>
+                      )}
                     </div>
                   </td>
                 </tr>

@@ -7,7 +7,7 @@ import {
   showLoading,
   dismissToast,
 } from "../../components/Notification/toast";
-
+import { isClient } from "../../hooks/roleCheck";
 // ─── Helpers ──────────────────────────────────────────────────────────────────
 const fmt = (dt) => {
   if (!dt) return "—";
@@ -474,7 +474,7 @@ export default function PaymentsTab({ taxInvoices = [], onRefetch }) {
               ? "Create a tax invoice first before recording payments"
               : "Record a payment against one of the tax invoices"}
           </p>
-          {taxInvoices.length > 0 && (
+          {!isClient() && taxInvoices.length > 0 && (
             <button
               className={styles.addBtn}
               onClick={() => setShowAddPopup(true)}

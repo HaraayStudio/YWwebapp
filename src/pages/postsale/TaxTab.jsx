@@ -13,7 +13,7 @@ import {
   showLoading,
   dismissToast,
 } from "../../components/Notification/toast";
-
+import { canManage } from "../../hooks/roleCheck";
 import { usePostSalesById } from "../../api/hooks/usePostSales";
 // ─── Helpers ──────────────────────────────────────────────────────────────────
 const fmt = (dt) => {
@@ -797,9 +797,14 @@ export default function TaxTab({ postSalesId, invoices = [], onRefetch }) {
             <span className={styles.countChip}>{invoices.length}</span>
           )}
         </div>
-        <button className={styles.addBtn} onClick={() => setShowAddPopup(true)}>
-          + New Tax Invoice
-        </button>
+        {canManage() && (
+          <button
+            className={styles.addBtn}
+            onClick={() => setShowAddPopup(true)}
+          >
+            + New Tax Invoice
+          </button>
+        )}
       </div>
 
       {/* ── Stats row ── */}
@@ -844,12 +849,14 @@ export default function TaxTab({ postSalesId, invoices = [], onRefetch }) {
           <p className={styles.emptyHint}>
             Create a tax invoice directly, or convert a paid proforma invoice
           </p>
-          <button
-            className={styles.addBtn}
-            onClick={() => setShowAddPopup(true)}
-          >
-            + New Tax Invoice
-          </button>
+          {canManage() && (
+            <button
+              className={styles.addBtn}
+              onClick={() => setShowAddPopup(true)}
+            >
+              + New Tax Invoice
+            </button>
+          )}
         </div>
       ) : (
         <div className={styles.cardList}>

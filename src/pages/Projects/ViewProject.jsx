@@ -1297,7 +1297,7 @@ import AddEmployeeToProjectPopup from "./AddEmployeeToProjectPopup";
 import { useEmployeeList } from "../../api/hooks/useEmployees";
 import AddReraPopup from "./AddReraPopup";
 import ReraTab from "./ReraTab";
-import { canManage } from "../../hooks/roleCheck";
+import { canManage, isClient } from "../../hooks/roleCheck";
 // import { useReraByProject } from "../../api/hooks/useRera"; // your existing hook
 // ─── Helpers ──────────────────────────────────────────────────────────────────
 const fmt = (dt) => {
@@ -1644,15 +1644,17 @@ const StageNode = ({ stage, depth = 0, onDocClick, onAddDoc }) => {
             </button>
           )}
 
-          <button
-            className={styles.addDocBtn}
-            onClick={(e) => {
-              e.stopPropagation();
-              onAddDoc(stage);
-            }}
-          >
-            + Add Doc
-          </button>
+          {!isClient() && (
+            <button
+              className={styles.addDocBtn}
+              onClick={(e) => {
+                e.stopPropagation();
+                onAddDoc(stage);
+              }}
+            >
+              + Add Doc
+            </button>
+          )}
           {hasMedia && (
             <span className={styles.mediaBadge}>
               🖼 {stage.mediaFiles.length}
@@ -2030,7 +2032,7 @@ const SiteVisitsTab = ({ siteVisits, projectId, onOpenGallery }) => {
     <div>
       <div className={styles.sectionHeader}>
         <h3>Site Visits</h3>
-        {canManage() && (
+        {!isClient() && (
           <button
             className={styles.primaryBtn}
             onClick={() => setShowPopup(true)}
@@ -2154,7 +2156,7 @@ const StructuresTab = ({ structures, navigate, projectId }) => {
       <div className={styles.emptyState}>
         <span>🏢</span>
         <p>No structures defined for this project yet.</p>
-        {canManage() && (
+        {!isClient() && (
           <button
             className={styles.primaryBtn}
             onClick={() => navigate(`/projects/${projectId}/structure`)}
@@ -2170,7 +2172,7 @@ const StructuresTab = ({ structures, navigate, projectId }) => {
     <div className={styles.structList}>
       <div className={styles.sectionHeader}>
         <br />
-        {canManage() && (
+        {!isClient() && (
           <button
             className={styles.primaryBtn}
             onClick={() => navigate(`/projects/${projectId}/structure`)}
@@ -2179,7 +2181,7 @@ const StructuresTab = ({ structures, navigate, projectId }) => {
           </button>
         )}
       </div>
-      <br />
+      {/* <br /> */}
       <div className={styles.structGrid}>
         {structures.map((s, i) => {
           const STRUCT_ICONS = {
@@ -2407,11 +2409,14 @@ const TABS = [
   { key: "overview", label: "Overview", icon: "🏠" },
   { key: "stages", label: "Stages", icon: "📋" },
   { key: "documents", label: "Documents", icon: "📁" },
-  { key: "employees", label: "Team", icon: "👥" },
+
+  ...(canManage() ? [{ key: "employees", label: "Team", icon: "👥" }] : []),
   { key: "sitevisits", label: "Site Visits", icon: "📍" },
   { key: "structures", label: "Structures", icon: "🏢" },
   { key: "meetings", label: "Meetings", icon: "🤝" },
-  { key: "rera", label: "RERA", icon: "📋" }, // NEW TAB
+  ...(canManage() ? [{ key: "rera", label: "RERA", icon: "📋" }] : []),
+
+  // { key: "rera", label: "RERA", icon: "📋" }, // NEW TAB
 ];
 
 export default function ViewProject() {

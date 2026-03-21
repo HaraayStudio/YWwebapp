@@ -162,7 +162,7 @@ const TABS = [
   { key: "location", label: "Location", icon: "📍" },
   { key: "area", label: "Areas", icon: "📐" },
   { key: "timeline", label: "Timeline", icon: "◷" },
-  { key: "structures", label: "Structures", icon: "🏢" },
+  // { key: "structures", label: "Structures", icon: "🏢" },
   { key: "logo", label: "Logo", icon: "🖼" },
 ];
 

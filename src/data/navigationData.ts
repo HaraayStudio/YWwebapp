@@ -382,31 +382,19 @@ export const navigationData: NavItem[] = [
     ],
   },
 
-  {
-    id: "accounts",
-    label: "Accounts",
-    icon: "accounts",
-    children: [
-      {
-        id: "payment-receipts",
-        label: "Payment Receipts",
-        path: "/accounts/payment-receipts",
-        icon: "receipt",
-      },
-      {
-        id: "payment-vouchers",
-        label: "Payment Vouchers",
-        path: "/accounts/payment-vouchers",
-        icon: "voucher",
-      },
-      {
-        id: "bank-accounts",
-        label: "Bank Accounts",
-        path: "/accounts/bank-accounts",
-        icon: "bank",
-      },
-    ],
-  },
+  // {
+  //   id: "accounts",
+  //   label: "Accounts",
+  //   icon: "accounts",
+  //   children: [
+  //     {
+  //       id: "payment-receipts",
+  //       label: "Payment Records",
+  //       path: "/accounts/records",
+  //       icon: "receipt",
+  //     },
+  //   ],
+  // },
 
   {
     id: "hr",
