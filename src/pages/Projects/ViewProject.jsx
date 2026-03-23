@@ -1819,16 +1819,16 @@ const OverviewTab = ({ p }) => {
           />
         )}
         {p.plotArea != null && (
-          <InfoField label="Plot Area" value={`${p.plotArea} sq.ft`} />
+          <InfoField label="Plot Area" value={`${p.plotArea} sq.mt`} />
         )}
         {p.totalBuiltUpArea != null && (
           <InfoField
             label="Built-Up Area"
-            value={`${p.totalBuiltUpArea} sq.ft`}
+            value={`${p.totalBuiltUpArea} sq.mt`}
           />
         )}
         {p.totalCarpetArea != null && (
-          <InfoField label="Carpet Area" value={`${p.totalCarpetArea} sq.ft`} />
+          <InfoField label="Carpet Area" value={`${p.totalCarpetArea} sq.mt`} />
         )}
       </div>
 
@@ -2284,7 +2284,7 @@ const StructuresTab = ({ structures, navigate, projectId }) => {
                 <div className={styles.structArea}>
                   <span className={styles.structAreaLabel}>Built-Up Area</span>
                   <span className={styles.structAreaVal}>
-                    {s.builtUpArea.toLocaleString()} sq.ft
+                    {s.builtUpArea.toLocaleString()} sq.mt
                   </span>
                 </div>
               )}

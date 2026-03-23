@@ -356,10 +356,10 @@ const AreaTab = ({ form, setForm }) => {
   return (
     <div className={styles.sectionGrid}>
       <div className={styles.sectionCard} style={{ gridColumn: "1 / -1" }}>
-        <div className={styles.sectionHead}>📐 Area Measurements (sq.ft)</div>
+        <div className={styles.sectionHead}>📐 Area Measurements (sq.mt)</div>
 
         <div className={styles.threeCol}>
-          <FormField label="Plot Area" hint="Total land area in sq.ft">
+          <FormField label="Plot Area" hint="Total land area in sq.mt">
             <Input
               type="number"
               value={form.plotArea}
