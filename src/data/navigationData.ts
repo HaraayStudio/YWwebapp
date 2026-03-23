@@ -268,18 +268,19 @@ const NAV_PERMISSIONS: Record<string, UserRole[] | "ALL"> = {
   "presales-all": ["ADMIN", "CO_FOUNDER", "HR", "CLIENT"],
 
   // Projects (PostSales)
-  "postsales-new": ["ADMIN", "CO_FOUNDER", "HR"],
+  "postsales-new": ["ADMIN", "CO_FOUNDER", "HR", "SR_ARCHITECT"],
   "postsales-all": [
     "ADMIN",
     "CO_FOUNDER",
     "HR",
-    "CLIENT", // 👈 client can see their projects
+    "CLIENT",
+    "SR_ARCHITECT", // 👈 client can see their projects
   ],
   "postsales-invoices": ["ADMIN", "CO_FOUNDER", "HR"],
 
   // Clients
-  "manage-clients": ["ADMIN", "CO_FOUNDER", "HR"],
-  "add-new-client": ["ADMIN", "CO_FOUNDER", "HR"],
+  "manage-clients": ["ADMIN", "CO_FOUNDER", "HR", "SR_ARCHITECT"],
+  "add-new-client": ["ADMIN", "CO_FOUNDER", "HR", "SR_ARCHITECT"],
 
   // Accounts
   "payment-receipts": ["ADMIN", "CO_FOUNDER", "HR"],
