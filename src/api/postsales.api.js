@@ -1,7 +1,9 @@
 import axiosInstance from "./axiosInstance";
-
-export const createPostSales = (data) =>
-  axiosInstance.post("/postsales/createpostSales", data);
+export const createPostSales = (data, isOldClient) =>
+  axiosInstance.post(
+    `/postsales/createpostSales?isOldClient=${isOldClient}`,
+    data
+  );
 export const convertToPostSales = (preSalesId) =>
   axiosInstance.post(
     `/postsales/converttopostSales?preSalesId=${preSalesId}`

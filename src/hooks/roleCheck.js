@@ -36,7 +36,7 @@ export const getUserRole = () => getStoredUser()?.role ?? null;
  */
 export const canManage = () => {
   const role = getUserRole();
-  return ["ADMIN", "CO_FOUNDER", "HR"].includes(role);
+  return ["ADMIN", "CO_FOUNDER", "HR", "SR_ARCHITECT"].includes(role);
 };
 
 /**

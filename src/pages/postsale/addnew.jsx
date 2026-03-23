@@ -155,7 +155,7 @@ const initialForm = {
   clientEmail: "",
   clientPhone: "",
   clientAddress: "",
-  // post-sale fields
+  // Project fields
   postSalesStatus: "CREATED",
   notified: false,
   remark: "",
@@ -209,7 +209,7 @@ const CreatePostSales = () => {
   //   ✓ auto-sets postSalesdateTime     → LocalDateTime.now()
   //   ✓ auto-creates project            → projectService.createQuickProject()
   //   ✓ accepts postSalesStatus, notified, remark
-  //   ✗ preSales / acceptedQuotation    → NOT needed for direct post-sale
+  //   ✗ preSales / acceptedQuotation    → NOT needed for direct Project
   //   ✗ project / invoices              → auto-created / managed separately
   const buildPayload = () => {
     const payload = {
@@ -251,7 +251,7 @@ const CreatePostSales = () => {
   //         <div className={styles.successRing}>
   //           <span className={styles.successIconChar}>◎</span>
   //         </div>
-  //         <h2>Post-Sale Created!</h2>
+  //         <h2>Project Created!</h2>
   //         <p>Record saved. A project has been auto-created and linked.</p>
   //         {createdId && (
   //           <div className={styles.successId}>
@@ -271,7 +271,7 @@ const CreatePostSales = () => {
   //             className={styles.primaryBtn}
   //             onClick={() => navigate("/postsales")}
   //           >
-  //             ◈ All Post-Sales
+  //             ◈ All Projects
   //           </button>
   //           <button
   //             className={styles.ghostBtn}
@@ -297,7 +297,7 @@ const CreatePostSales = () => {
         <div className={styles.heroLeft}>
           <div className={styles.heroLogoFallback}>PS</div>
           <div className={styles.heroInfo}>
-            <h1 className={styles.heroTitle}>New Post-Sale</h1>
+            <h1 className={styles.heroTitle}>New Project</h1>
             <div className={styles.heroMeta}>
               <span>Direct Entry</span>
               <span className={styles.dot}>·</span>
@@ -423,11 +423,11 @@ const CreatePostSales = () => {
           )}
         </div>
 
-        {/* ════ Card 2: Post-Sale Details ════ */}
+        {/* ════ Card 2: Project Details ════ */}
         <div className={styles.card}>
           <div className={styles.cardHeader}>
             <span className={styles.cardIcon}>⬡</span>
-            <h3>Post-Sale Details</h3>
+            <h3>Project Details</h3>
           </div>
 
           {/* Status */}
@@ -472,7 +472,7 @@ const CreatePostSales = () => {
             <div className={styles.toggleInfo}>
               <span className={styles.toggleLabel}>Client Notified</span>
               <span className={styles.toggleHint}>
-                Has the client been informed about this post-sale?
+                Has the client been informed about this Project?
               </span>
             </div>
             <button
@@ -529,7 +529,7 @@ const CreatePostSales = () => {
             <p>
               {apiError?.response?.data?.message ||
                 apiError?.message ||
-                "Failed to create post-sale. Please try again."}
+                "Failed to create Project. Please try again."}
             </p>
           </div>
         )}
@@ -554,7 +554,7 @@ const CreatePostSales = () => {
                 <span className={styles.spinner} /> Creating…
               </>
             ) : (
-              "◎ Create Post-Sale"
+              "◎ Create Project"
             )}
           </button>
         </div>

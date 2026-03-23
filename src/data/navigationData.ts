@@ -265,7 +265,7 @@ const NAV_PERMISSIONS: Record<string, UserRole[] | "ALL"> = {
 
   // Enquiry (PreSales)
   "presales-new": ["ADMIN", "CO_FOUNDER", "HR"],
-  "presales-all": ["ADMIN", "CO_FOUNDER", "HR", "CLIENT"],
+  "presales-all": ["ADMIN", "CO_FOUNDER", "HR"],
 
   // Projects (PostSales)
   "postsales-new": ["ADMIN", "CO_FOUNDER", "HR", "SR_ARCHITECT"],

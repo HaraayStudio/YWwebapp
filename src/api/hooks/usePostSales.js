@@ -5,7 +5,9 @@ export const useCreatePostSales = () => {
   const queryClient = useQueryClient();
 
   return useMutation({
-    mutationFn: (data) => postSalesApi.createPostSales(data),
+    mutationFn: ({ data, isOldClient }) =>
+      postSalesApi.createPostSales(data, isOldClient),
+
     onSuccess: () => {
       queryClient.invalidateQueries(["postsales"]);
     },

@@ -155,7 +155,8 @@ const initialForm = {
   clientEmail: "",
   clientPhone: "",
   clientAddress: "",
-  // post-sale fields
+  password: "", // ← new: login password for the new client account
+  // Project fields
   postSalesStatus: "CREATED",
   notified: false,
   remark: "",
@@ -197,6 +198,9 @@ const CreatePostSales = () => {
       else if (!/\S+@\S+\.\S+/.test(form.clientEmail))
         e.clientEmail = "Enter a valid email address";
       if (!form.clientPhone.trim()) e.clientPhone = "Phone number is required";
+      if (!form.password.trim()) e.password = "Password is required";
+      else if (form.password.length < 6)
+        e.password = "Password must be at least 6 characters";
     }
     if (!form.postSalesStatus) e.postSalesStatus = "Please select a status";
     setErrors(e);
@@ -209,7 +213,7 @@ const CreatePostSales = () => {
   //   ✓ auto-sets postSalesdateTime     → LocalDateTime.now()
   //   ✓ auto-creates project            → projectService.createQuickProject()
   //   ✓ accepts postSalesStatus, notified, remark
-  //   ✗ preSales / acceptedQuotation    → NOT needed for direct post-sale
+  //   ✗ preSales / acceptedQuotation    → NOT needed for direct Project
   //   ✗ project / invoices              → auto-created / managed separately
   const buildPayload = () => {
     const payload = {
@@ -226,6 +230,7 @@ const CreatePostSales = () => {
         email: form.clientEmail.trim(),
         phone: Number(form.clientPhone),
         address: form.clientAddress.trim() || null,
+        password: form.password, // ← new: account password
       };
     }
 
@@ -234,23 +239,30 @@ const CreatePostSales = () => {
 
   const handleSubmit = () => {
     if (!validate()) return;
-    createPostSales(buildPayload(), {
-      onSuccess: (res) => {
-        console.log("Create PostSale Response:", res);
 
-        const id = res?.data?.data?.id || res?.data?.id;
-
-        if (!id) {
-          console.error("PostSale ID missing in response", res);
-          return;
-        }
-
-        setCreatedId(id);
-        setSubmitSuccess(true);
-
-        navigate(`/postsales/view/${id}`);
+    createPostSales(
+      {
+        data: buildPayload(),
+        isOldClient: form.isExistingClient, // 🔥 IMPORTANT
       },
-    });
+      {
+        onSuccess: (res) => {
+          console.log("Create PostSale Response:", res);
+
+          const id = res?.data?.data?.id || res?.data?.id;
+
+          if (!id) {
+            console.error("PostSale ID missing in response", res);
+            return;
+          }
+
+          setCreatedId(id);
+          setSubmitSuccess(true);
+
+          navigate(`/postsales/view/${id}`);
+        },
+      },
+    );
   };
 
   // ── Success screen ───────────────────────────────────────────────────────────
@@ -261,7 +273,7 @@ const CreatePostSales = () => {
   //         <div className={styles.successRing}>
   //           <span className={styles.successIconChar}>◎</span>
   //         </div>
-  //         <h2>Post-Sale Created!</h2>
+  //         <h2>Project Created!</h2>
   //         <p>Record saved. A project has been auto-created and linked.</p>
   //         {createdId && (
   //           <div className={styles.successId}>
@@ -281,7 +293,7 @@ const CreatePostSales = () => {
   //             className={styles.primaryBtn}
   //             onClick={() => navigate("/postsales")}
   //           >
-  //             ◈ All Post-Sales
+  //             ◈ All Projects
   //           </button>
   //           <button
   //             className={styles.ghostBtn}
@@ -307,7 +319,7 @@ const CreatePostSales = () => {
         <div className={styles.heroLeft}>
           <div className={styles.heroLogoFallback}>PS</div>
           <div className={styles.heroInfo}>
-            <h1 className={styles.heroTitle}>New Post-Sale</h1>
+            <h1 className={styles.heroTitle}>New Project</h1>
             <div className={styles.heroMeta}>
               <span>Direct Entry</span>
               <span className={styles.dot}>·</span>
@@ -355,6 +367,16 @@ const CreatePostSales = () => {
               onClick={() => {
                 set("isExistingClient", true);
                 setErrors({});
+                // Clear new-client fields when switching back
+                setForm((prev) => ({
+                  ...prev,
+                  isExistingClient: true,
+                  clientName: "",
+                  clientEmail: "",
+                  clientPhone: "",
+                  clientAddress: "",
+                  password: "",
+                }));
               }}
             >
               <span>◈</span> Existing Client
@@ -365,6 +387,12 @@ const CreatePostSales = () => {
               onClick={() => {
                 set("isExistingClient", false);
                 setErrors({});
+                // Clear existing client selection when switching
+                setForm((prev) => ({
+                  ...prev,
+                  isExistingClient: false,
+                  clientId: null,
+                }));
               }}
             >
               <span>⊕</span> New Client
@@ -417,6 +445,7 @@ const CreatePostSales = () => {
                   className={styles.input}
                   placeholder="Enter phone number"
                   value={form.clientPhone}
+                  maxLength={10}
                   onChange={(e) => set("clientPhone", e.target.value)}
                 />
               </FormField>
@@ -429,15 +458,31 @@ const CreatePostSales = () => {
                   onChange={(e) => set("clientAddress", e.target.value)}
                 />
               </FormField>
+
+              <FormField
+                label="Password"
+                required
+                error={errors.password}
+                hint="Client will use this password to log in to the client portal"
+              >
+                <input
+                  type="password"
+                  className={styles.input}
+                  placeholder="Min. 6 characters"
+                  value={form.password}
+                  onChange={(e) => set("password", e.target.value)}
+                  autoComplete="new-password"
+                />
+              </FormField>
             </div>
           )}
         </div>
 
-        {/* ════ Card 2: Post-Sale Details ════ */}
+        {/* ════ Card 2: Project Details ════ */}
         <div className={styles.card}>
           <div className={styles.cardHeader}>
             <span className={styles.cardIcon}>⬡</span>
-            <h3>Post-Sale Details</h3>
+            <h3>Project Details</h3>
           </div>
 
           {/* Status */}
@@ -482,7 +527,7 @@ const CreatePostSales = () => {
             <div className={styles.toggleInfo}>
               <span className={styles.toggleLabel}>Client Notified</span>
               <span className={styles.toggleHint}>
-                Has the client been informed about this post-sale?
+                Has the client been informed about this Project?
               </span>
             </div>
             <button
@@ -539,7 +584,7 @@ const CreatePostSales = () => {
             <p>
               {apiError?.response?.data?.message ||
                 apiError?.message ||
-                "Failed to create post-sale. Please try again."}
+                "Failed to create Project. Please try again."}
             </p>
           </div>
         )}
@@ -564,7 +609,7 @@ const CreatePostSales = () => {
                 <span className={styles.spinner} /> Creating…
               </>
             ) : (
-              "◎ Create Post-Sale"
+              "◎ Create Project"
             )}
           </button>
         </div>

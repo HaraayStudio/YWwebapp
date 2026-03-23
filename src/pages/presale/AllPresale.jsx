@@ -1264,7 +1264,7 @@ const DetailField = ({ label, value, mono, full }) => (
 
 // ─── Main ─────────────────────────────────────────────────────────────────────
 const AllPreSales = () => {
-  // const { data, isLoading, isError } = usePreSalesList();
+  const { data, isLoading, isError } = usePreSalesList();
   const navigate = useNavigate();
   const { mutate: deletePreSale } = useDeletePreSales();
   const { mutate } = useConvertToPostSales();
@@ -1279,7 +1279,7 @@ const AllPreSales = () => {
   const { data: clientResponse, isLoading: clientLoading } =
     useClientById(userId);
 
-  const data = clientResponse?.preSales;
+  // const data = clientResponse?.preSales;
   console.log(data);
   const handleConfirmConvert = () => {
     const t = showLoading("Converting to Project...");
