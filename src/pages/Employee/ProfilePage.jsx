@@ -3112,7 +3112,7 @@ export default function ProfilePage() {
             </SectionCard>
 
             <SectionCard title="Account Info" icon="🔒">
-              <InfoRow label="User ID" value={`#${user.id}`} />
+              {/* <InfoRow label="User ID" value={`#${user.id}`} /> */}
               <InfoRow label="Email" value={user.email} />
               <InfoRow label="Role" value={user.role} />
               <InfoRow label="Status" value={user.status} />
