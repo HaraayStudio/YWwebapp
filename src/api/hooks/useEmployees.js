@@ -131,15 +131,16 @@ export const useUpdateMyPassword = () => {
 /* ===============================
    UPDATE PROFILE IMAGE
 =============================== */
+
 export const useUpdateMyProfileImage = () => {
   const queryClient = useQueryClient();
-
+ 
   return useMutation({
-    mutationFn: (file) => employeeApi.updateMyProfileImage(file),
-
+    mutationFn: (formData) => employeeApi.updateMyProfileImage(formData),
+ 
     onSuccess: () => {
-      // refresh user profile everywhere
-      queryClient.invalidateQueries(["userProfile"]);
+      // Refresh profile so new image shows in Header + ProfilePage hero
+      queryClient.invalidateQueries({ queryKey: ["employeeData"] });
     },
   });
 };

@@ -34,13 +34,7 @@ export const updateMyProfile = (data) => {
 /* ===============================
    UPDATE PROFILE IMAGE
 =============================== */
-export const updateMyProfileImage = (file) => {
-  const formData = new FormData();
-
-  if (file) {
-    formData.append("profileimage", file); // ⚠️ must match backend name
-  }
-
+export const updateMyProfileImage = (formData) => {
   return api.put("/employees/updatemyprofileimage", formData, {
     headers: {
       "Content-Type": "multipart/form-data",
