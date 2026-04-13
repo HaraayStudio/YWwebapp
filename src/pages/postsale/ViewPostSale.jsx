@@ -771,15 +771,31 @@ const EmptyState = ({ icon, text }) => (
 );
 
 // ─── Tabs ─────────────────────────────────────────────────────────────────────
-const TABS = [
-  { key: "overview", label: "Overview", icon: "⬡" },
-  { key: "client", label: "Client", icon: "◈" },
-  { key: "project", label: "Sites", icon: "◻" },
-  { key: "proforma", label: "Proforma Invoices", icon: "◑" },
-  { key: "tax", label: "Tax Invoices", icon: "◐" },
-  { key: "payments", label: "Payments", icon: "◎" },
-];
+// const TABS = [
+//   { key: "overview", label: "Overview", icon: "⬡" },
+//   { key: "client", label: "Client", icon: "◈" },
+//   { key: "project", label: "Sites", icon: "◻" },
+//   { key: "proforma", label: "Proforma Invoices", icon: "◑" },
+//   { key: "tax", label: "Tax Invoices", icon: "◐" },
+//   { key: "payments", label: "Payments", icon: "◎" },
+// ];
+const getTabs = () => {
+  const baseTabs = [
+    { key: "overview", label: "Overview", icon: "⬡" },
+    { key: "client", label: "Client", icon: "◈" },
+    { key: "project", label: "Sites", icon: "◻" },
+  ];
 
+  if (canManage()) {
+    baseTabs.push(
+      { key: "proforma", label: "Proforma Invoices", icon: "◑" },
+      { key: "tax", label: "Tax Invoices", icon: "◐" },
+      { key: "payments", label: "Payments", icon: "◎" },
+    );
+  }
+
+  return baseTabs;
+};
 // ─── Overview Tab ─────────────────────────────────────────────────────────────
 const OverviewTab = ({ data, onMarkNotified, onUpdateRemark }) => {
   const [remark, setRemark] = useState(data.remark || "");
@@ -1401,7 +1417,7 @@ const ViewPostSales = () => {
 
       {/* Tabs */}
       <div className={styles.tabBar}>
-        {TABS.map((tab) => {
+        {getTabs().map((tab) => {
           const count = tabCounts[tab.key];
           return (
             <button
