@@ -166,7 +166,7 @@ import EditProject from "./pages/Projects/Editproject";
 import Structure from "./pages/Projects/Structure";
 import ViewStructure from "./pages/Projects/ViewStructure";
 import Documents from "./pages/Projects/Documents";
-import AddWebProject from "./pages/Website/AddWebProject";
+import AddWebProject from "./pages/Website/Addwebproject";
 import Manageprojects from "./pages/Website/Manageprojects ";
 import EditWebproject from "./pages/Website/Editproject";
 import Viewproject from "./pages/Website/Viewproject";
