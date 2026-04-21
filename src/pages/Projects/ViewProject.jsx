@@ -2204,11 +2204,11 @@ const StructuresTab = ({ structures, navigate, projectId }) => {
           const levelCount = s.levels?.length || 0;
           const avgProgress = levelCount
             ? Math.round(
-                s.levels.reduce(
-                  (acc, l) => acc + (Number(l.progressPercentage) || 0),
-                  0,
-                ) / levelCount,
-              )
+              s.levels.reduce(
+                (acc, l) => acc + (Number(l.progressPercentage) || 0),
+                0,
+              ) / levelCount,
+            )
             : null;
 
           return (
@@ -2543,7 +2543,7 @@ export default function ViewProject() {
         <div className={styles.heroRight}>
           <StatusBadge status={p.projectStatus} />
           <div className={styles.heroDate}>
-            {canManage() && (
+            {!isClient() && (
               <button
                 className={styles.primaryBtn}
                 onClick={() => navigate(`/projects/edit/${p.projectId}`)}
