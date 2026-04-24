@@ -89,13 +89,13 @@ const STATUS_CONFIG = {
     dot: "#3b82f6",
     icon: "🎉",
   },
-  WORK_FROM_HOME: {
-    label: "WFH",
-    bg: "#f0fdf4",
-    color: "#166534",
-    dot: "#4ade80",
-    icon: "🏠",
-  },
+  // WORK_FROM_HOME: {
+  //   label: "WFH",
+  //   bg: "#f0fdf4",
+  //   color: "#166534",
+  //   dot: "#4ade80",
+  //   icon: "🏠",
+  // },
 };
 
 // ─── Sub-components ───────────────────────────────────────────────────────────
@@ -415,13 +415,13 @@ export default function AttendanceCalendar() {
   // ── Month-level summary for the stats strip ───────────────────────────────
   const monthSummary = useMemo(() => {
     if (!monthlyData)
-      return { total: 0, present: 0, absent: 0, leave: 0, wfh: 0 };
+      return { total: 0, present: 0, absent: 0, leave: 0 };
     return {
       total: monthlyData.length,
       present: monthlyData.filter((r) => r.status === "PRESENT").length,
       absent: monthlyData.filter((r) => r.status === "ABSENT").length,
       leave: monthlyData.filter((r) => r.status === "ON_LEAVE").length,
-      wfh: monthlyData.filter((r) => r.status === "WORK_FROM_HOME").length,
+      // wfh: monthlyData.filter((r) => r.status === "WORK_FROM_HOME").length,
     };
   }, [monthlyData]);
 
@@ -480,12 +480,12 @@ export default function AttendanceCalendar() {
               bg: "#ede9fe",
               color: "#4c1d95",
             },
-            {
-              label: "WFH",
-              value: monthSummary.wfh,
-              bg: "#f0fdf4",
-              color: "#166534",
-            },
+            // {
+            //   label: "WFH",
+            //   value: monthSummary.wfh,
+            //   bg: "#f0fdf4",
+            //   color: "#166534",
+            // },
           ].map(({ label, value, bg, color }) => (
             <div
               key={label}

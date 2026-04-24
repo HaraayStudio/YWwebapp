@@ -860,13 +860,13 @@ const SUMMARY_DEFS = [
     color: "#92400e",
   },
   { key: "LATE", label: "Late", icon: "⏰", bg: "#fff7ed", color: "#9a3412" },
-  {
-    key: "WORK_FROM_HOME",
-    label: "WFH",
-    icon: "🏠",
-    bg: "#f0fdf4",
-    color: "#166534",
-  },
+  // {
+  //   key: "WORK_FROM_HOME",
+  //   label: "WFH",
+  //   icon: "🏠",
+  //   bg: "#f0fdf4",
+  //   color: "#166534",
+  // },
   {
     key: "unmarked",
     label: "Unmarked",
@@ -1243,10 +1243,10 @@ export default function DailyAttendance() {
                 style={
                   isActive && cfg
                     ? {
-                        background: cfg.bg,
-                        color: cfg.color,
-                        borderColor: cfg.dot,
-                      }
+                      background: cfg.bg,
+                      color: cfg.color,
+                      borderColor: cfg.dot,
+                    }
                     : {}
                 }
                 onClick={() => setFilterStatus(f)}
@@ -1342,10 +1342,10 @@ export default function DailyAttendance() {
                           style={
                             cfg
                               ? {
-                                  background: cfg.bg,
-                                  color: cfg.color,
-                                  borderColor: cfg.dot,
-                                }
+                                background: cfg.bg,
+                                color: cfg.color,
+                                borderColor: cfg.dot,
+                              }
                               : {}
                           }
                         >
@@ -1450,10 +1450,10 @@ export default function DailyAttendance() {
                       style={
                         cfg
                           ? {
-                              background: cfg.bg,
-                              color: cfg.color,
-                              borderColor: cfg.dot,
-                            }
+                            background: cfg.bg,
+                            color: cfg.color,
+                            borderColor: cfg.dot,
+                          }
                           : {}
                       }
                     >

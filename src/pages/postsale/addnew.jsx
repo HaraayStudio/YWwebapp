@@ -312,9 +312,8 @@ const CreatePostSales = () => {
             <div className={styles.heroBadges}>
               <StatusBadge status={form.postSalesStatus} />
               <div
-                className={`${styles.notifiedPill} ${
-                  form.notified ? styles.notifiedOn : styles.notifiedOff
-                }`}
+                className={`${styles.notifiedPill} ${form.notified ? styles.notifiedOn : styles.notifiedOff
+                  }`}
               >
                 {form.notified ? "✓ Client Notified" : "⚠ Not Notified"}
               </div>
@@ -442,11 +441,10 @@ const CreatePostSales = () => {
                 <button
                   key={s.value}
                   type="button"
-                  className={`${styles.statusCard} ${
-                    form.postSalesStatus === s.value
+                  className={`${styles.statusCard} ${form.postSalesStatus === s.value
                       ? styles.statusCardActive
                       : ""
-                  }`}
+                    }`}
                   style={
                     form.postSalesStatus === s.value
                       ? { background: s.bg, borderColor: s.dot, color: s.color }

@@ -113,14 +113,14 @@ const STATUS_CONFIG = {
     calBg: "rgba(59,130,246,0.15)",
     calBorder: "#3b82f6",
   },
-  WORK_FROM_HOME: {
-    label: "WFH",
-    bg: "#f0fdf4",
-    color: "#166534",
-    dot: "#4ade80",
-    calBg: "rgba(74,222,128,0.15)",
-    calBorder: "#4ade80",
-  },
+  // WORK_FROM_HOME: {
+  //   label: "WFH",
+  //   bg: "#f0fdf4",
+  //   color: "#166534",
+  //   dot: "#4ade80",
+  //   calBg: "rgba(74,222,128,0.15)",
+  //   calBorder: "#4ade80",
+  // },
 };
 
 // ─── Small live clock ─────────────────────────────────────────────────────────
@@ -181,13 +181,13 @@ export default function MyAttendance() {
   // ── Monthly stats ─────────────────────────────────────────────────────────
   const stats = useMemo(() => {
     if (!monthlyData)
-      return { present: 0, absent: 0, leave: 0, late: 0, wfh: 0 };
+      return { present: 0, absent: 0, leave: 0, late: 0 };
     return {
       present: monthlyData.filter((r) => r.status === "PRESENT").length,
       absent: monthlyData.filter((r) => r.status === "ABSENT").length,
       leave: monthlyData.filter((r) => r.status === "ON_LEAVE").length,
       late: monthlyData.filter((r) => r.status === "LATE").length,
-      wfh: monthlyData.filter((r) => r.status === "WORK_FROM_HOME").length,
+      // wfh: monthlyData.filter((r) => r.status === "WORK_FROM_HOME").length,
     };
   }, [monthlyData]);
 
@@ -431,14 +431,14 @@ export default function MyAttendance() {
                 color: "#4c1d95",
                 dot: "#7c3aed",
               },
-              {
-                key: "wfh",
-                label: "WFH",
-                icon: "🏠",
-                bg: "#f0fdf4",
-                color: "#166534",
-                dot: "#4ade80",
-              },
+              // {
+              //   key: "wfh",
+              //   label: "WFH",
+              //   icon: "🏠",
+              //   bg: "#f0fdf4",
+              //   color: "#166534",
+              //   dot: "#4ade80",
+              // },
             ].map(({ key, label, icon, bg, color, dot }) => (
               <div
                 key={key}
